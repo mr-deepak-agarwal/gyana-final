@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Gyana Education Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8fafc;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    }
+    
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+    }
+    
+    .card:hover {
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: white;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: #6366f1;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      border: 2px solid #6366f1;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-secondary:hover {
+      background: #6366f1;
+      color: white;
+    }
+    
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .modal.active {
+      display: flex;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .tab {
+      padding: 12px 24px;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-weight: 600;
+      color: #64748b;
+      transition: all 0.3s;
+    }
+    
+    .tab.active {
+      color: #6366f1;
+      border-bottom-color: #6366f1;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .badge-high { background: #fee2e2; color: #dc2626; }
+    .badge-medium { background: #fef3c7; color: #d97706; }
+    .badge-low { background: #dbeafe; color: #2563eb; }
+    .badge-active { background: #d1fae5; color: #059669; }
+    .badge-inactive { background: #f1f5f9; color: #64748b; }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    th {
+      background: #f8fafc;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #475569;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    tr:hover {
+      background: #f8fafc;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <!-- Login Screen -->
+    <div v-if="!isAuthenticated" class="min-h-screen flex items-center justify-center gradient-bg">
+      <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 gradient-bg rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="shield-check" class="text-white w-8 h-8"></i>
+          </div>
+          <h1 class="text-3xl font-bold text-gray-900">Admin Login</h1>
+          <p class="text-gray-500 mt-2">Gyana Education Hub</p>
+        </div>
+        
+        <div v-if="loginError" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+          {{ loginError }}
+        </div>
+        
+        <form @submit.prevent="login">
+          <div class="mb-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
+            <input v-model="loginForm.username" type="text" required class="form-input" placeholder="Enter username">
+          </div>
+          
+          <div class="mb-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+            <input v-model="loginForm.password" type="password" required class="form-input" placeholder="Enter password">
+          </div>
+          
+          <button type="submit" class="btn-primary w-full">
+            {{ isLoggingIn ? 'Logging in...' : 'Login' }}
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div v-else class="min-h-screen">
+      <!-- Header -->
+      <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
+              <i data-lucide="sparkles" class="text-white w-5 h-5"></i>
+            </div>
+            <div>
+              <h1 class="text-xl font-bold text-gray-900">Gyana Admin</h1>
+              <p class="text-sm text-gray-500">Welcome, {{ username }}</p>
+            </div>
+          </div>
+          
+          <button @click="logout" class="btn-secondary">
+            <i data-lucide="log-out" class="w-4 h-4 inline mr-2"></i>
+            Logout
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <div class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div class="card p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-500">Total Notifications</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1">{{ stats.notifications }}</p>
+              </div>
+              <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                <i data-lucide="bell" class="text-blue-600 w-6 h-6"></i>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-500">Total Notes</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1">{{ stats.notes }}</p>
+              </div>
+              <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                <i data-lucide="file-text" class="text-green-600 w-6 h-6"></i>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-500">Total Videos</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1">{{ stats.videos }}</p>
+              </div>
+              <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                <i data-lucide="play-circle" class="text-purple-600 w-6 h-6"></i>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-500">Total Topics</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1">{{ allTopics.length }}</p>
+              </div>
+              <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                <i data-lucide="bookmark" class="text-orange-600 w-6 h-6"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="card mb-6">
+          <div class="flex border-b overflow-x-auto">
+            <div class="tab" :class="{ active: activeTab === 'notifications' }" @click="activeTab = 'notifications'">
+              <i data-lucide="bell" class="w-4 h-4 inline mr-2"></i>
+              Notifications
+            </div>
+            <div class="tab" :class="{ active: activeTab === 'notes' }" @click="activeTab = 'notes'">
+              <i data-lucide="file-text" class="w-4 h-4 inline mr-2"></i>
+              Notes
+            </div>
+            <div class="tab" :class="{ active: activeTab === 'videos' }" @click="activeTab = 'videos'">
+              <i data-lucide="play-circle" class="w-4 h-4 inline mr-2"></i>
+              Videos
+            </div>
+          </div>
+          
+          <div class="p-6">
+            <!-- Notifications Tab -->
+            <div v-if="activeTab === 'notifications'">
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-900">Manage Notifications</h2>
+                <button @click="openNotificationModal()" class="btn-primary">
+                  <i data-lucide="plus" class="w-4 h-4 inline mr-2"></i>
+                  Add Notification
+                </button>
+              </div>
+              
+              <div class="overflow-x-auto">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Exam Name</th>
+                      <th>Exam Date</th>
+                      <th>Priority</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="notification in notifications" :key="notification.id">
+                      <td class="font-medium">{{ notification.title }}</td>
+                      <td>{{ notification.exam_name || 'N/A' }}</td>
+                      <td>{{ formatDate(notification.exam_date) }}</td>
+                      <td>
+                        <span class="badge" :class="'badge-' + notification.priority">
+                          {{ notification.priority }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="badge" :class="notification.is_active ? 'badge-active' : 'badge-inactive'">
+                          {{ notification.is_active ? 'Active' : 'Inactive' }}
+                        </span>
+                      </td>
+                      <td>
+                        <button @click="openNotificationModal(notification)" class="text-blue-600 hover:text-blue-800 mr-3">
+                          <i data-lucide="edit" class="w-4 h-4"></i>
+                        </button>
+                        <button @click="deleteNotification(notification.id)" class="text-red-600 hover:text-red-800">
+                          <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Notes Tab -->
+            <div v-if="activeTab === 'notes'">
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-900">Manage Notes</h2>
+                <button @click="openNoteModal()" class="btn-primary">
+                  <i data-lucide="plus" class="w-4 h-4 inline mr-2"></i>
+                  Add Note
+                </button>
+              </div>
+              
+              <div class="overflow-x-auto">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Course</th>
+                      <th>Semester</th>
+                      <th>Topic</th>
+                      <th>Downloads</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="note in notes" :key="note.id">
+                      <td class="font-medium">{{ note.title }}</td>
+                      <td>{{ note.course }}</td>
+                      <td>Sem {{ note.semester }}</td>
+                      <td>{{ note.topic }}</td>
+                      <td>{{ note.downloads }}</td>
+                      <td>
+                        <span class="badge" :class="note.is_active ? 'badge-active' : 'badge-inactive'">
+                          {{ note.is_active ? 'Active' : 'Inactive' }}
+                        </span>
+                      </td>
+                      <td>
+                        <button @click="openNoteModal(note)" class="text-blue-600 hover:text-blue-800 mr-3">
+                          <i data-lucide="edit" class="w-4 h-4"></i>
+                        </button>
+                        <button @click="deleteNote(note.id)" class="text-red-600 hover:text-red-800">
+                          <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Videos Tab -->
+            <div v-if="activeTab === 'videos'">
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-900">Manage Videos</h2>
+                <button @click="openVideoModal()" class="btn-primary">
+                  <i data-lucide="plus" class="w-4 h-4 inline mr-2"></i>
+                  Add Video
+                </button>
+              </div>
+              
+              <div class="overflow-x-auto">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Course</th>
+                      <th>Semester</th>
+                      <th>Topic</th>
+                      <th>Views</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="video in videos" :key="video.id">
+                      <td class="font-medium">{{ video.title }}</td>
+                      <td>{{ video.course }}</td>
+                      <td>Sem {{ video.semester }}</td>
+                      <td>{{ video.topic }}</td>
+                      <td>{{ video.views }}</td>
+                      <td>
+                        <span class="badge" :class="video.is_active ? 'badge-active' : 'badge-inactive'">
+                          {{ video.is_active ? 'Active' : 'Inactive' }}
+                        </span>
+                      </td>
+                      <td>
+                        <button @click="openVideoModal(video)" class="text-blue-600 hover:text-blue-800 mr-3">
+                          <i data-lucide="edit" class="w-4 h-4"></i>
+                        </button>
+                        <button @click="deleteVideo(video.id)" class="text-red-600 hover:text-red-800">
+                          <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div class="modal" :class="{ active: showNotificationModal }" @click="closeNotificationModal">
+      <div class="modal-content" @click.stop>
+        <div class="gradient-bg p-6 flex justify-between items-center">
+          <h3 class="text-2xl font-bold text-white">
+            {{ editingNotification ? 'Edit Notification' : 'Add Notification' }}
+          </h3>
+          <button @click="closeNotificationModal" class="text-white hover:bg-white/20 p-2 rounded-lg">
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+        
+        <form @submit.prevent="saveNotification" class="p-6 space-y-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Title *</label>
+            <input v-model="notificationForm.title" type="text" required class="form-input" placeholder="Notification title">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Message *</label>
+            <textarea v-model="notificationForm.message" required class="form-input" rows="4" placeholder="Notification message"></textarea>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Exam Name</label>
+              <input v-model="notificationForm.exam_name" type="text" class="form-input" placeholder="e.g., Mid-Term Exam">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Exam Date</label>
+              <input v-model="notificationForm.exam_date" type="date" class="form-input">
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Priority</label>
+              <select v-model="notificationForm.priority" class="form-input">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+            
+            <div v-if="editingNotification">
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+              <select v-model="notificationForm.is_active" class="form-input">
+                <option :value="true">Active</option>
+                <option :value="false">Inactive</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="flex space-x-3 pt-4">
+            <button type="submit" class="btn-primary flex-1">Save</button>
+            <button type="button" @click="closeNotificationModal" class="btn-secondary flex-1">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Note Modal -->
+    <div class="modal" :class="{ active: showNoteModal }" @click="closeNoteModal">
+      <div class="modal-content" @click.stop>
+        <div class="gradient-bg p-6 flex justify-between items-center">
+          <h3 class="text-2xl font-bold text-white">
+            {{ editingNote ? 'Edit Note' : 'Add Note' }}
+          </h3>
+          <button @click="closeNoteModal" class="text-white hover:bg-white/20 p-2 rounded-lg">
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+        
+        <form @submit.prevent="saveNote" class="p-6 space-y-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Title *</label>
+            <input v-model="noteForm.title" type="text" required class="form-input" placeholder="Note title">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+            <textarea v-model="noteForm.description" class="form-input" rows="3" placeholder="Brief description"></textarea>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">PDF URL *</label>
+            <input v-model="noteForm.pdf_url" type="url" required class="form-input" placeholder="https://example.com/file.pdf">
+          </div>
+          
+          <div class="grid grid-cols-3 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Course *</label>
+              <select v-model="noteForm.course" required class="form-input">
+                <option value="">Select</option>
+                <option value="B.Sc">B.Sc</option>
+                <option value="B.A">B.A</option>
+                <option value="B.Com">B.Com</option>
+                <option value="B.C.A">B.C.A</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Semester *</label>
+              <select v-model="noteForm.semester" required class="form-input">
+                <option value="">Select</option>
+                <option v-for="i in 8" :key="i" :value="i">Semester {{ i }}</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">File Size (KB)</label>
+              <input v-model.number="noteForm.file_size_kb" type="number" class="form-input" placeholder="1024">
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Topic *</label>
+            <input v-model="noteForm.topic" type="text" required class="form-input" placeholder="e.g., Linear Algebra">
+          </div>
+          
+          <div v-if="editingNote">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+            <select v-model="noteForm.is_active" class="form-input">
+              <option :value="true">Active</option>
+              <option :value="false">Inactive</option>
+            </select>
+          </div>
+          
+          <div class="flex space-x-3 pt-4">
+            <button type="submit" class="btn-primary flex-1">Save</button>
+            <button type="button" @click="closeNoteModal" class="btn-secondary flex-1">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div class="modal" :class="{ active: showVideoModal }" @click="closeVideoModal">
+      <div class="modal-content" @click.stop>
+        <div class="gradient-bg p-6 flex justify-between items-center">
+          <h3 class="text-2xl font-bold text-white">
+            {{ editingVideo ? 'Edit Video' : 'Add Video' }}
+          </h3>
+          <button @click="closeVideoModal" class="text-white hover:bg-white/20 p-2 rounded-lg">
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+        
+        <form @submit.prevent="saveVideo" class="p-6 space-y-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Title *</label>
+            <input v-model="videoForm.title" type="text" required class="form-input" placeholder="Video title">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+            <textarea v-model="videoForm.description" class="form-input" rows="3" placeholder="Brief description"></textarea>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">YouTube URL *</label>
+            <input v-model="videoForm.youtube_url" type="url" required class="form-input" placeholder="https://youtube.com/watch?v=...">
+          </div>
+          
+          <div class="grid grid-cols-3 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Course *</label>
+              <select v-model="videoForm.course" required class="form-input">
+                <option value="">Select</option>
+                <option value="B.Sc">B.Sc</option>
+                <option value="B.A">B.A</option>
+                <option value="B.Com">B.Com</option>
+                <option value="B.C.A">B.C.A</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Semester *</label>
+              <select v-model="videoForm.semester" required class="form-input">
+                <option value="">Select</option>
+                <option v-for="i in 8" :key="i" :value="i">Semester {{ i }}</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Duration (min)</label>
+              <input v-model.number="videoForm.duration_minutes" type="number" class="form-input" placeholder="45">
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Topic *</label>
+            <input v-model="videoForm.topic" type="text" required class="form-input" placeholder="e.g., Calculus Basics">
+          </div>
+          
+          <div v-if="editingVideo">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+            <select v-model="videoForm.is_active" class="form-input">
+              <option :value="true">Active</option>
+              <option :value="false">Inactive</option>
+            </select>
+          </div>
+          
+          <div class="flex space-x-3 pt-4">
+            <button type="submit" class="btn-primary flex-1">Save</button>
+            <button type="button" @click="closeVideoModal" class="btn-secondary flex-1">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+
+    const API_URL = window.location.origin;
+
+    createApp({
+      data() {
+        return {
+          isAuthenticated: false,
+          username: '',
+          token: '',
+          isLoggingIn: false,
+          loginError: '',
+          loginForm: {
+            username: '',
+            password: ''
+          },
+          activeTab: 'notifications',
+          notifications: [],
+          notes: [],
+          videos: [],
+          allTopics: [],
+          stats: {
+            notifications: 0,
+            notes: 0,
+            videos: 0
+          },
+          
+          // Modals
+          showNotificationModal: false,
+          showNoteModal: false,
+          showVideoModal: false,
+          
+          editingNotification: null,
+          editingNote: null,
+          editingVideo: null,
+          
+          notificationForm: {
+            title: '',
+            message: '',
+            exam_name: '',
+            exam_date: '',
+            priority: 'medium',
+            is_active: true
+          },
+          
+          noteForm: {
+            title: '',
+            description: '',
+            pdf_url: '',
+            course: '',
+            semester: '',
+            topic: '',
+            file_size_kb: null,
+            is_active: true
+          },
+          
+          videoForm: {
+            title: '',
+            description: '',
+            youtube_url: '',
+            course: '',
+            semester: '',
+            topic: '',
+            duration_minutes: null,
+            is_active: true
+          }
+        };
+      },
+      
+      mounted() {
+        const savedToken = localStorage.getItem('admin_token');
+        const savedUsername = localStorage.getItem('admin_username');
+        
+        if (savedToken && savedUsername) {
+          this.token = savedToken;
+          this.username = savedUsername;
+          this.isAuthenticated = true;
+          this.loadData();
+        }
+        
+        setTimeout(() => lucide.createIcons(), 100);
+      },
+      
+      methods: {
+        async login() {
+          this.isLoggingIn = true;
+          this.loginError = '';
+          
+          try {
+            const response = await fetch(`${API_URL}/api/auth/login`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(this.loginForm)
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+              this.token = data.access_token;
+              this.username = data.username;
+              this.isAuthenticated = true;
+              
+              localStorage.setItem('admin_token', this.token);
+              localStorage.setItem('admin_username', this.username);
+              
+              await this.loadData();
+            } else {
+              this.loginError = data.detail || 'Login failed';
+            }
+          } catch (error) {
+            this.loginError = 'Connection error. Please check if the API server is running.';
+            console.error('Login error:', error);
+          } finally {
+            this.isLoggingIn = false;
+          }
+        },
+        
+        logout() {
+          this.isAuthenticated = false;
+          this.token = '';
+          this.username = '';
+          localStorage.removeItem('admin_token');
+          localStorage.removeItem('admin_username');
+        },
+        
+        async loadData() {
+          await Promise.all([
+            this.loadNotifications(),
+            this.loadNotes(),
+            this.loadVideos(),
+            this.loadTopics()
+          ]);
+          setTimeout(() => lucide.createIcons(), 100);
+        },
+        
+        async apiRequest(endpoint, options = {}) {
+          const headers = {
+            'Content-Type': 'application/json',
+            ...(this.token && { 'Authorization': `Bearer ${this.token}` }),
+            ...options.headers
+          };
+          
+          const response = await fetch(`${API_URL}${endpoint}`, {
+            ...options,
+            headers
+          });
+          
+          if (response.status === 401) {
+            this.logout();
+            throw new Error('Unauthorized');
+          }
+          
+          return response;
+        },
+        
+        async loadNotifications() {
+          try {
+            const response = await this.apiRequest('/api/notifications?is_active=');
+            this.notifications = await response.json();
+            this.stats.notifications = this.notifications.length;
+          } catch (error) {
+            console.error('Error loading notifications:', error);
+          }
+        },
+        
+        async loadNotes() {
+          try {
+            const response = await this.apiRequest('/api/notes?is_active=');
+            this.notes = await response.json();
+            this.stats.notes = this.notes.length;
+          } catch (error) {
+            console.error('Error loading notes:', error);
+          }
+        },
+        
+        async loadVideos() {
+          try {
+            const response = await this.apiRequest('/api/videos?is_active=');
+            this.videos = await response.json();
+            this.stats.videos = this.videos.length;
+          } catch (error) {
+            console.error('Error loading videos:', error);
+          }
+        },
+        
+        async loadTopics() {
+          try {
+            const response = await this.apiRequest('/api/topics');
+            const data = await response.json();
+            this.allTopics = data.topics;
+          } catch (error) {
+            console.error('Error loading topics:', error);
+          }
+        },
+        
+        // Notification methods
+        openNotificationModal(notification = null) {
+          if (notification) {
+            this.editingNotification = notification;
+            this.notificationForm = {
+              title: notification.title,
+              message: notification.message,
+              exam_name: notification.exam_name || '',
+              exam_date: notification.exam_date || '',
+              priority: notification.priority,
+              is_active: notification.is_active
+            };
+          } else {
+            this.editingNotification = null;
+            this.notificationForm = {
+              title: '',
+              message: '',
+              exam_name: '',
+              exam_date: '',
+              priority: 'medium',
+              is_active: true
+            };
+          }
+          this.showNotificationModal = true;
+          setTimeout(() => lucide.createIcons(), 100);
+        },
+        
+        closeNotificationModal() {
+          this.showNotificationModal = false;
+          this.editingNotification = null;
+        },
+        
+        async saveNotification() {
+          try {
+            const endpoint = this.editingNotification 
+              ? `/api/notifications/${this.editingNotification.id}`
+              : '/api/notifications';
+            
+            const method = this.editingNotification ? 'PUT' : 'POST';
+            
+            await this.apiRequest(endpoint, {
+              method,
+              body: JSON.stringify(this.notificationForm)
+            });
+            
+            await this.loadNotifications();
+            this.closeNotificationModal();
+          } catch (error) {
+            alert('Error saving notification: ' + error.message);
+          }
+        },
+        
+        async deleteNotification(id) {
+          if (confirm('Are you sure you want to delete this notification?')) {
+            try {
+              await this.apiRequest(`/api/notifications/${id}`, { method: 'DELETE' });
+              await this.loadNotifications();
+            } catch (error) {
+              alert('Error deleting notification: ' + error.message);
+            }
+          }
+        },
+        
+        // Note methods
+        openNoteModal(note = null) {
+          if (note) {
+            this.editingNote = note;
+            this.noteForm = {
+              title: note.title,
+              description: note.description || '',
+              pdf_url: note.pdf_url,
+              course: note.course,
+              semester: note.semester,
+              topic: note.topic,
+              file_size_kb: note.file_size_kb,
+              is_active: note.is_active
+            };
+          } else {
+            this.editingNote = null;
+            this.noteForm = {
+              title: '',
+              description: '',
+              pdf_url: '',
+              course: '',
+              semester: '',
+              topic: '',
+              file_size_kb: null,
+              is_active: true
+            };
+          }
+          this.showNoteModal = true;
+          setTimeout(() => lucide.createIcons(), 100);
+        },
+        
+        closeNoteModal() {
+          this.showNoteModal = false;
+          this.editingNote = null;
+        },
+        
+        async saveNote() {
+          try {
+            const endpoint = this.editingNote 
+              ? `/api/notes/${this.editingNote.id}`
+              : '/api/notes';
+            
+            const method = this.editingNote ? 'PUT' : 'POST';
+            
+            await this.apiRequest(endpoint, {
+              method,
+              body: JSON.stringify(this.noteForm)
+            });
+            
+            await this.loadNotes();
+            await this.loadTopics();
+            this.closeNoteModal();
+          } catch (error) {
+            alert('Error saving note: ' + error.message);
+          }
+        },
+        
+        async deleteNote(id) {
+          if (confirm('Are you sure you want to delete this note?')) {
+            try {
+              await this.apiRequest(`/api/notes/${id}`, { method: 'DELETE' });
+              await this.loadNotes();
+              await this.loadTopics();
+            } catch (error) {
+              alert('Error deleting note: ' + error.message);
+            }
+          }
+        },
+        
+        // Video methods
+        openVideoModal(video = null) {
+          if (video) {
+            this.editingVideo = video;
+            this.videoForm = {
+              title: video.title,
+              description: video.description || '',
+              youtube_url: video.youtube_url,
+              course: video.course,
+              semester: video.semester,
+              topic: video.topic,
+              duration_minutes: video.duration_minutes,
+              is_active: video.is_active
+            };
+          } else {
+            this.editingVideo = null;
+            this.videoForm = {
+              title: '',
+              description: '',
+              youtube_url: '',
+              course: '',
+              semester: '',
+              topic: '',
+              duration_minutes: null,
+              is_active: true
+            };
+          }
+          this.showVideoModal = true;
+          setTimeout(() => lucide.createIcons(), 100);
+        },
+        
+        closeVideoModal() {
+          this.showVideoModal = false;
+          this.editingVideo = null;
+        },
+        
+        async saveVideo() {
+          try {
+            const endpoint = this.editingVideo 
+              ? `/api/videos/${this.editingVideo.id}`
+              : '/api/videos';
+            
+            const method = this.editingVideo ? 'PUT' : 'POST';
+            
+            await this.apiRequest(endpoint, {
+              method,
+              body: JSON.stringify(this.videoForm)
+            });
+            
+            await this.loadVideos();
+            await this.loadTopics();
+            this.closeVideoModal();
+          } catch (error) {
+            alert('Error saving video: ' + error.message);
+          }
+        },
+        
+        async deleteVideo(id) {
+          if (confirm('Are you sure you want to delete this video?')) {
+            try {
+              await this.apiRequest(`/api/videos/${id}`, { method: 'DELETE' });
+              await this.loadVideos();
+              await this.loadTopics();
+            } catch (error) {
+              alert('Error deleting video: ' + error.message);
+            }
+          }
+        },
+        
+        formatDate(date) {
+          if (!date) return 'N/A';
+          return new Date(date).toLocaleDateString();
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
