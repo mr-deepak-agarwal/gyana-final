@@ -10,12 +10,10 @@ import bcrypt
 import jwt
 import psycopg2
 import psycopg2.extras
-from dotenv import load_dotenv
 
 # --------------------------------------------------
 # ENV
 # --------------------------------------------------
-load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 SECRET_KEY = os.getenv("SECRET_KEY", "change-me")
@@ -462,8 +460,3 @@ def get_topics():
             topics.add(video["topic"])
     
     return {"topics": sorted(list(topics))}
-
-# --------------------------------------------------
-# VERCEL ENTRY
-# --------------------------------------------------
-handler = app
