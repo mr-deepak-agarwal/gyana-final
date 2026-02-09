@@ -1,6 +1,7 @@
 fastapi
-mysql-connector-python
-pydantic
+uvicorn
+psycopg2-binary
 bcrypt
 PyJWT
-python-multipart
+python-dotenv
+pydantic

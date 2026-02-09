@@ -1,5 +1,4 @@
 {
-  "version": 2,
   "builds": [
     {
       "src": "api/index.py",
@@ -15,12 +14,5 @@
       "src": "/(.*)",
       "dest": "/$1"
     }
-  ],
-  "env": {
-    "DB_HOST": "@db_host",
-    "DB_USER": "@db_user",
-    "DB_PASSWORD": "@db_password",
-    "DB_NAME": "@db_name",
-    "SECRET_KEY": "@secret_key"
-  }
+  ]
 }
