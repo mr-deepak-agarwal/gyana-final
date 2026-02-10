@@ -195,7 +195,7 @@
     }
     
     /* Scrollbar */
-    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: #f1f5f9; }
     ::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 4px; }
 
@@ -214,44 +214,123 @@
       animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
     
-    /* Notification Sidebar */
-    .notification-sidebar {
-      position: fixed;
-      top: 80px;
-      right: 20px;
-      width: 320px;
-      max-height: calc(100vh - 100px);
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-      z-index: 40;
+    /* Scrolling Notifications Container */
+    .notifications-scroll-container {
+      height: 550px;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%);
+      border-radius: 32px;
+      padding: 24px;
+      border: 2px solid rgba(99, 102, 241, 0.1);
+    }
+    
+    .notifications-scroll-wrapper {
+      height: 100%;
       overflow-y: auto;
-      transition: all 0.3s;
+      padding-right: 12px;
     }
     
-    .notification-item {
-      border-bottom: 1px solid #e2e8f0;
-      padding: 16px;
-      transition: background 0.2s;
+    .notifications-scroll-wrapper::-webkit-scrollbar {
+      width: 6px;
     }
     
-    .notification-item:hover {
-      background: #f8fafc;
+    .notifications-scroll-wrapper::-webkit-scrollbar-track {
+      background: rgba(99, 102, 241, 0.1);
+      border-radius: 10px;
     }
     
-    .notification-item:last-child {
-      border-bottom: none;
+    .notifications-scroll-wrapper::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      border-radius: 10px;
     }
     
-    .priority-high { border-left: 4px solid #ef4444; }
-    .priority-medium { border-left: 4px solid #f59e0b; }
-    .priority-low { border-left: 4px solid #3b82f6; }
+    /* Auto-scroll animation */
+    @keyframes autoScroll {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(calc(-100% + 550px)); }
+    }
     
-    @media (max-width: 768px) {
-      .notification-sidebar {
-        width: calc(100vw - 40px);
-        right: 20px;
-      }
+    .auto-scroll {
+      animation: autoScroll 20s linear infinite;
+    }
+    
+    .auto-scroll:hover {
+      animation-play-state: paused;
+    }
+    
+    /* Individual notification card */
+    .notification-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      border-left: 5px solid;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+    
+    .notification-card:hover {
+      transform: translateX(8px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+    
+    .notification-card.priority-high {
+      border-left-color: #ef4444;
+      background: linear-gradient(135deg, white 0%, rgba(239, 68, 68, 0.03) 100%);
+    }
+    
+    .notification-card.priority-medium {
+      border-left-color: #f59e0b;
+      background: linear-gradient(135deg, white 0%, rgba(245, 158, 11, 0.03) 100%);
+    }
+    
+    .notification-card.priority-low {
+      border-left-color: #3b82f6;
+      background: linear-gradient(135deg, white 0%, rgba(59, 130, 246, 0.03) 100%);
+    }
+    
+    .notification-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .notification-badge.priority-high {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+    
+    .notification-badge.priority-medium {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+    
+    .notification-badge.priority-low {
+      background: rgba(59, 130, 246, 0.1);
+      color: #3b82f6;
+    }
+    
+    /* Empty state */
+    .empty-notifications {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px;
+    }
+    
+    .empty-notifications i {
+      width: 80px;
+      height: 80px;
+      opacity: 0.3;
+      margin-bottom: 16px;
     }
   </style>
 </head>
@@ -399,67 +478,56 @@
         },
         formatDate(date) {
           if (!date) return '';
-          return new Date(date).toLocaleDateString('en-IN', { 
+          const d = new Date(date);
+          return d.toLocaleDateString('en-IN', { 
             day: 'numeric', 
             month: 'short', 
             year: 'numeric' 
           });
         },
         handleReveal() {
-          const reveals = document.querySelectorAll('.slide-up, .stagger');
-          reveals.forEach(el => {
+          document.querySelectorAll('.slide-up, .stagger').forEach(el => {
             const windowHeight = window.innerHeight;
             const elementTop = el.getBoundingClientRect().top;
-            const elementVisible = 100;
-            
-            if (elementTop < windowHeight - elementVisible) {
+            if (elementTop < windowHeight - 100) {
               el.classList.add('active');
             }
           });
         },
         async handleSubmit() {
-          const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScZdFShQ_mvEVx7HOPNTYrxFIdL8zPDnYD5t52odj7KwzcoZg/formResponse';
-          
-          const formBody = new URLSearchParams({
-            'entry.1293525062': this.formData.name,
-            'entry.406357918': this.formData.email,
-            'entry.551067289': this.formData.mobile,
-            'entry.1896454958': this.formData.currentCourse,
-            'entry.1588021559': this.formData.class,
-            'entry.2125934549': this.formData.goals,
-            'entry.172398133': this.formData.skills,
-            'entry.1245267734': this.formData.skillswant,
-            'entry.1474993808': this.formData.collegeName
-          });
-
           try {
-            await fetch(formUrl, {
+            const response = await fetch(`${window.location.origin}/api/submit`, {
               method: 'POST',
-              mode: 'no-cors',
-              body: formBody
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(this.formData)
             });
-            
-            this.formSubmitted = true;
-            this.formData = { name: '', email: '', mobile: '', currentCourse: '', collegeName: '', class: '', goals: '', skills: '', skillswant: '' };
-            
-            setTimeout(() => {
-              this.formSubmitted = false;
-              this.showForm = false;
-            }, 3000);
+
+            if (response.ok) {
+              this.formSubmitted = true;
+              setTimeout(() => {
+                this.showForm = false;
+                this.formSubmitted = false;
+                this.formData = {
+                  name: '', email: '', mobile: '', currentCourse: '',
+                  collegeName: '', class: '', goals: '', skills: '', skillswant: ''
+                };
+              }, 2000);
+            }
           } catch (error) {
-            console.error('Error:', error);
+            console.error('Form submission error:', error);
           }
         }
       },
       template: `
         <div class="min-h-screen">
           <!-- Navigation -->
-          <nav :class="['fixed w-full z-50 transition-all duration-500', scrollY > 50 ? 'bg-white/95 backdrop-blur-lg shadow-lg shadow-black/5' : 'bg-transparent']">
+          <nav :class="['fixed top-0 left-0 right-0 z-50 transition-all duration-500', 
+                        scrollY > 50 ? 'bg-white/95 backdrop-blur-lg shadow-lg' : 'bg-transparent']">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
               <div class="flex items-center justify-between h-20">
                 <!-- Logo -->
-                <a href="#Home" class="flex items-center space-x-3 group">
-                  <div class="w-12 h-12 gradient-bg rounded-2xl flex items-center justify-center shadow-lg pulse-glow">
+                <a href="#" class="flex items-center space-x-3 group">
+                  <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                     <i data-lucide="sparkles" class="text-white w-6 h-6"></i>
                   </div>
                   <span class="text-2xl font-display font-bold text-midnight">Gyana</span>
@@ -474,12 +542,6 @@
                     <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-electric transition-all duration-300 group-hover:w-full"></span>
                   </a>
                 </div>
-
-                <!-- Notification Bell -->
-                <button @click="showNotifications = !showNotifications" class="hidden md:block relative p-2 hover:bg-gray-100 rounded-lg transition">
-                  <i data-lucide="bell" class="w-5 h-5 text-slate"></i>
-                  <span v-if="notifications.length > 0" class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                </button>
 
                 <!-- CTA Button -->
                 <button @click="showForm = true" class="hidden md:block btn-primary">
@@ -508,43 +570,6 @@
               </div>
             </div>
           </nav>
-
-          <!-- Notification Sidebar -->
-          <div v-if="showNotifications && notifications.length > 0" class="notification-sidebar">
-            <div class="sticky top-0 bg-gradient-to-r from-electric to-purple-600 text-white p-4 rounded-t-2xl flex justify-between items-center">
-              <div class="flex items-center space-x-2">
-                <i data-lucide="bell" class="w-5 h-5"></i>
-                <h3 class="font-bold">Notifications</h3>
-              </div>
-              <button @click="showNotifications = false" class="hover:bg-white/20 p-1 rounded">
-                <i data-lucide="x" class="w-5 h-5"></i>
-              </button>
-            </div>
-            
-            <div class="p-2">
-              <div v-for="notification in notifications" :key="notification.id" 
-                   :class="['notification-item rounded-lg', 'priority-' + notification.priority]">
-                <div class="flex items-start space-x-3">
-                  <div :class="['w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0',
-                                notification.priority === 'high' ? 'bg-red-100' : 
-                                notification.priority === 'medium' ? 'bg-amber-100' : 'bg-blue-100']">
-                    <i data-lucide="alert-circle" 
-                       :class="['w-5 h-5', 
-                                notification.priority === 'high' ? 'text-red-600' : 
-                                notification.priority === 'medium' ? 'text-amber-600' : 'text-blue-600']"></i>
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <h4 class="font-semibold text-gray-900 text-sm">{{ notification.title }}</h4>
-                    <p class="text-gray-600 text-xs mt-1">{{ notification.message }}</p>
-                    <div v-if="notification.exam_name" class="mt-2 text-xs text-gray-500">
-                      <strong>{{ notification.exam_name }}</strong>
-                      <span v-if="notification.exam_date"> • {{ formatDate(notification.exam_date) }}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
           <!-- Hero Section -->
           <section id="Home" class="min-h-screen pt-24 pb-16 px-6 lg:px-8 relative overflow-hidden">
@@ -588,117 +613,70 @@
                   </div>
                 </div>
 
-                <!-- Right - Hero Image -->
+                <!-- Right - Scrolling Notifications -->
                 <div class="slide-up relative lg:pl-8">
-                  <div class="relative">
-                    <!-- Main Image -->
-                    <div class="relative z-10">
-                      <img :src="images.hero" alt="Students" 
-                           class="w-full h-[500px] object-cover rounded-3xl shadow-2xl shadow-electric/20">
-                      
-                      <!-- Floating Badge -->
-                      <div class="absolute -top-6 -right-6 bg-white px-6 py-4 rounded-2xl shadow-xl float">
-                        <div class="flex items-center space-x-3">
-                          <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center">
-                            <i data-lucide="graduation-cap" class="text-white w-6 h-6"></i>
-                          </div>
-                          <div>
-                            <div class="text-2xl font-display font-bold text-midnight">4</div>
-                            <div class="text-sm text-slate">UG Courses</div>
-                          </div>
+                  <div class="notifications-scroll-container">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between mb-6 pb-4 border-b-2 border-electric/20">
+                      <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
+                          <i data-lucide="bell" class="w-5 h-5 text-white"></i>
+                        </div>
+                        <div>
+                          <h3 class="font-display font-bold text-lg text-midnight">Latest Updates</h3>
+                          <p class="text-xs text-slate">Stay informed with announcements</p>
                         </div>
                       </div>
-                      
-                      <!-- Bottom Badge -->
-                      <div class="absolute -bottom-6 -left-6 bg-midnight text-white px-6 py-4 rounded-2xl shadow-xl float-delay">
-                        <div class="flex items-center space-x-3">
-                          <i data-lucide="sparkles" class="w-6 h-6 text-amber-400"></i>
-                          <span class="font-semibold">Admissions Open 2026</span>
+                      <span v-if="notifications.length > 0" class="notification-badge priority-high">
+                        {{ notifications.length }} New
+                      </span>
+                    </div>
+                    
+                    <!-- Notifications List -->
+                    <div v-if="notifications.length > 0" class="notifications-scroll-wrapper">
+                      <div class="space-y-4">
+                        <div v-for="notification in notifications" 
+                             :key="notification.id" 
+                             :class="['notification-card', 'priority-' + notification.priority]">
+                          <div class="flex items-start justify-between mb-3">
+                            <span :class="['notification-badge', 'priority-' + notification.priority]">
+                              {{ notification.priority }}
+                            </span>
+                            <div class="flex items-center space-x-2 text-xs text-slate">
+                              <i data-lucide="clock" class="w-3 h-3"></i>
+                              <span>{{ formatDate(notification.created_at) }}</span>
+                            </div>
+                          </div>
+                          
+                          <h4 class="font-display font-bold text-base text-midnight mb-2">
+                            {{ notification.title }}
+                          </h4>
+                          
+                          <p class="text-sm text-slate leading-relaxed mb-3">
+                            {{ notification.message }}
+                          </p>
+                          
+                          <div v-if="notification.exam_name || notification.exam_date" 
+                               class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
+                            <div v-if="notification.exam_name" class="flex items-center space-x-2">
+                              <i data-lucide="graduation-cap" class="w-4 h-4 text-electric"></i>
+                              <span class="text-xs font-semibold text-midnight">{{ notification.exam_name }}</span>
+                            </div>
+                            <div v-if="notification.exam_date" class="flex items-center space-x-2">
+                              <i data-lucide="calendar" class="w-4 h-4 text-electric"></i>
+                              <span class="text-xs font-semibold text-electric">{{ formatDate(notification.exam_date) }}</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                     
-                    <!-- Background decoration -->
-                    <div class="absolute -z-10 top-10 -right-10 w-full h-full gradient-bg rounded-3xl opacity-20"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Marquee Section -->
-          <section class="py-6 bg-midnight overflow-hidden">
-            <div class="flex whitespace-nowrap marquee-track">
-              <div class="flex items-center space-x-12 px-6" v-for="i in 4" :key="i">
-                <span class="text-white/80 font-display text-xl">BA</span>
-                <span class="text-electric">★</span>
-                <span class="text-white/80 font-display text-xl">BSc</span>
-                <span class="text-pink-500">★</span>
-                <span class="text-white/80 font-display text-xl">BCom</span>
-                <span class="text-amber-500">★</span>
-                <span class="text-white/80 font-display text-xl">BCA</span>
-                <span class="text-emerald-500">★</span>
-                <span class="text-white/80 font-display text-xl">NEP 2020</span>
-                <span class="text-cyan-500">★</span>
-                <span class="text-white/80 font-display text-xl">Career Guidance</span>
-                <span class="text-violet-500">★</span>
-              </div>
-            </div>
-          </section>
-
-          <!-- Why Choose Section -->
-          <section class="py-24 px-6 lg:px-8 bg-cloud">
-            <div class="max-w-7xl mx-auto">
-              <div class="text-center mb-16 slide-up">
-                <span class="text-base font-semibold text-electric tracking-widest uppercase mb-4 block">Why Gyana</span>
-                <h2 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-midnight">
-                  Excellence in<br><span class="gradient-text">Every Detail</span>
-                </h2>
-              </div>
-              
-              <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 stagger">
-                <div v-for="(feature, i) in whyChoose" :key="i" 
-                     class="bg-white p-8 rounded-3xl card-hover cursor-default group border border-gray-100">
-                  <div :class="[feature.color, 'w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300']">
-                    <i :data-lucide="feature.icon" class="w-7 h-7 text-white"></i>
-                  </div>
-                  <h3 class="text-xl font-display font-bold text-midnight">{{ feature.text }}</h3>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Career Services Section -->
-          <section class="py-24 px-6 lg:px-8 bg-white relative overflow-hidden">
-            <!-- Background Image -->
-            <div class="absolute right-0 top-0 w-1/2 h-full opacity-10">
-              <img :src="images.students" class="w-full h-full object-cover" alt="">
-            </div>
-            
-            <div class="max-w-7xl mx-auto relative">
-              <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <div class="slide-up">
-                  <span class="text-base font-semibold text-electric tracking-widest uppercase mb-4 block">Career Guidance</span>
-                  <h2 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-midnight mb-8">
-                    Your Success,<br><span class="gradient-text">Our Mission</span>
-                  </h2>
-                  <p class="text-xl text-slate leading-relaxed mb-10">
-                    Every student receives personalized career counseling. From course selection to career placement, we guide you at every step.
-                  </p>
-                  <button @click="showForm = true" class="btn-primary">
-                    Get Career Guidance
-                  </button>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-6 stagger">
-                  <div v-for="(service, i) in careerServices" :key="i" 
-                       :class="[i % 2 === 1 ? 'mt-10' : '', 'bg-gradient-to-br from-gray-50 to-white p-8 rounded-3xl card-hover border border-gray-100']">
-                    <div class="w-14 h-14 gradient-bg rounded-2xl flex items-center justify-center mb-6">
-                      <i :data-lucide="service.icon" class="w-6 h-6 text-white"></i>
+                    <!-- Empty State -->
+                    <div v-else class="empty-notifications">
+                      <i data-lucide="inbox" class="text-slate"></i>
+                      <p class="text-slate font-medium">No notifications at the moment</p>
+                      <p class="text-slate/60 text-sm mt-2">Check back later for updates</p>
                     </div>
-                    <span class="text-5xl font-display font-bold text-gray-200">{{ service.num }}</span>
-                    <h4 class="text-xl font-display font-bold text-midnight mt-2">{{ service.title }}</h4>
-                    <p class="text-slate mt-2">{{ service.desc }}</p>
                   </div>
                 </div>
               </div>
@@ -706,101 +684,120 @@
           </section>
 
           <!-- Courses Section -->
-          <section id="Courses" class="py-24 px-6 lg:px-8 bg-midnight relative overflow-hidden">
-            <!-- Decorative elements -->
-            <div class="absolute top-0 left-0 w-full h-full">
-              <div class="absolute top-20 left-20 w-64 h-64 bg-electric/10 rounded-full blur-3xl"></div>
-              <div class="absolute bottom-20 right-20 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl"></div>
-            </div>
+          <section id="Courses" class="py-24 px-6 lg:px-8 bg-cloud relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-96 h-96 bg-electric/10 rounded-full blur-3xl"></div>
             
             <div class="max-w-7xl mx-auto relative">
               <div class="text-center mb-16 slide-up">
-                <span class="text-base font-semibold text-electric tracking-widest uppercase mb-4 block">Programs</span>
-                <h2 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white">
-                  UG Courses as per<br><span class="gradient-text">NEP 2020</span>
+                <span class="text-base font-semibold text-electric tracking-widest uppercase mb-4 block">Our Programs</span>
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-midnight mb-6">
+                  Choose Your <span class="gradient-text">Degree Path</span>
                 </h2>
+                <p class="text-xl text-slate max-w-2xl mx-auto">
+                  Four comprehensive undergraduate programs aligned with NEP 2020 curriculum.
+                </p>
               </div>
-              
+
               <div class="grid md:grid-cols-2 gap-8 stagger">
-                <div v-for="(course, i) in courses" :key="i" 
-                     class="bg-white/5 backdrop-blur-lg rounded-3xl p-8 card-hover border border-white/10 group">
-                  <div class="flex items-start justify-between mb-8">
-                    <div>
-                      <div :class="['w-16 h-16 rounded-2xl flex items-center justify-center mb-4 bg-gradient-to-br', course.color]">
-                        <i :data-lucide="course.icon" class="w-7 h-7 text-white"></i>
-                      </div>
-                      <span class="text-5xl font-display font-bold text-white">{{ course.title }}</span>
-                      <p class="text-white/50 mt-2">{{ course.fullName }}</p>
-                    </div>
-                  </div>
+                <div v-for="course in courses" :key="course.title" 
+                     class="bg-white rounded-3xl p-8 shadow-xl card-hover border border-gray-100 relative overflow-hidden">
+                  <div :class="['absolute top-0 right-0 w-32 h-32 rounded-full blur-2xl opacity-20 bg-gradient-to-br', course.color]"></div>
                   
-                  <div class="space-y-4">
-                    <div v-for="(feature, j) in course.features" :key="j" 
-                         class="flex items-start space-x-4">
-                      <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <i data-lucide="check" class="w-3.5 h-3.5 text-electric"></i>
-                      </div>
-                      <span class="text-white/70 leading-relaxed">{{ feature }}</span>
+                  <div class="relative">
+                    <div :class="['w-16 h-16 rounded-2xl flex items-center justify-center mb-6 bg-gradient-to-br', course.color]">
+                      <i :data-lucide="course.icon" class="w-8 h-8 text-white"></i>
                     </div>
+                    
+                    <h3 class="text-3xl font-display font-bold text-midnight mb-2">{{ course.title }}</h3>
+                    <p class="text-slate mb-6">{{ course.fullName }}</p>
+                    
+                    <ul class="space-y-3">
+                      <li v-for="feature in course.features" :key="feature" class="flex items-start space-x-3">
+                        <i data-lucide="check-circle" class="w-5 h-5 text-electric flex-shrink-0 mt-0.5"></i>
+                        <span class="text-slate">{{ feature }}</span>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
             </div>
           </section>
 
-          <!-- NEP Features -->
-          <section id="Features" class="py-24 px-6 lg:px-8 bg-white">
+          <!-- Features Section -->
+          <section id="Features" class="py-24 px-6 lg:px-8">
             <div class="max-w-7xl mx-auto">
-              <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <!-- Image Side -->
-                <div class="slide-up relative">
-                  <img :src="images.classroom" alt="Classroom" 
-                       class="w-full h-[500px] object-cover rounded-3xl shadow-2xl">
-                  <div class="absolute -bottom-8 -right-8 bg-electric text-white px-8 py-6 rounded-2xl shadow-xl">
-                    <div class="text-4xl font-display font-bold">NEP</div>
-                    <div class="text-white/80">2020 Framework</div>
+              <div class="text-center mb-16 slide-up">
+                <span class="text-base font-semibold text-electric tracking-widest uppercase mb-4 block">Why Choose Us</span>
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-midnight mb-6">
+                  Your Success is <span class="gradient-text">Our Priority</span>
+                </h2>
+              </div>
+
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-6 stagger">
+                <div v-for="item in whyChoose" :key="item.text" 
+                     class="bg-white rounded-2xl p-6 text-center shadow-lg card-hover border border-gray-100">
+                  <div :class="['w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4', item.color]">
+                    <i :data-lucide="item.icon" class="w-7 h-7 text-white"></i>
+                  </div>
+                  <p class="font-semibold text-midnight">{{ item.text }}</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- NEP 2020 Section -->
+          <section class="py-24 px-6 lg:px-8 bg-midnight relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-electric/20 rounded-full blur-3xl"></div>
+            
+            <div class="max-w-7xl mx-auto relative">
+              <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="slide-up">
+                  <span class="text-base font-semibold text-electric tracking-widest uppercase mb-4 block">NEP 2020</span>
+                  <h2 class="text-4xl md:text-5xl font-display font-bold text-white mb-6">
+                    New Education Policy <span class="gradient-text">Benefits</span>
+                  </h2>
+                  <p class="text-xl text-white/60 leading-relaxed mb-8">
+                    Experience transformative learning with India's progressive education framework.
+                  </p>
+                  
+                  <div class="grid grid-cols-2 gap-4">
+                    <div v-for="feature in nepFeatures" :key="feature" 
+                         class="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+                      <div class="flex items-center space-x-3">
+                        <i data-lucide="star" class="w-5 h-5 text-electric flex-shrink-0"></i>
+                        <span class="text-white font-medium text-sm">{{ feature }}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 
-                <!-- Content Side -->
-                <div>
-                  <div class="slide-up">
-                    <span class="text-base font-semibold text-electric tracking-widest uppercase mb-4 block">Framework</span>
-                    <h2 class="text-4xl md:text-5xl font-display font-bold text-midnight mb-8">
-                      Key Elements of<br><span class="gradient-text">NEP 2020</span>
-                    </h2>
-                  </div>
-                  
-                  <div class="space-y-5 stagger">
-                    <div v-for="(feature, i) in nepFeatures" :key="i" 
-                         class="flex items-center space-x-5 p-5 rounded-2xl bg-cloud hover:bg-electric/5 transition-colors duration-300 group cursor-default">
-                      <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0 group-hover:scale-110 transition-transform">
-                        {{ i + 1 }}
-                      </div>
-                      <span class="text-lg font-semibold text-midnight">{{ feature }}</span>
-                    </div>
-                  </div>
+                <div class="slide-up">
+                  <img :src="images.classroom" alt="Classroom" 
+                       class="rounded-3xl shadow-2xl w-full h-[500px] object-cover">
                 </div>
               </div>
             </div>
           </section>
 
-          <!-- Mission Section -->
-          <section class="py-24 px-6 lg:px-8 gradient-bg relative overflow-hidden">
-            <div class="absolute inset-0 bg-black/30"></div>
-            <div class="max-w-5xl mx-auto text-center relative slide-up">
-              <h2 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white mb-8">
-                Empowering Students,<br>Directing the Future
-              </h2>
-              <p class="text-xl text-white/80 leading-relaxed mb-12 max-w-2xl mx-auto">
-                Gyana's purpose is not just to teach, but to guide towards the right career through right guidance.
-              </p>
-              
-              <div class="flex flex-wrap justify-center gap-4 stagger">
-                <div v-for="item in ['Quality Coaching', 'Certified Counseling', 'Exam Preparation', 'Personal Mentorship', 'NEP 2020 Education', 'Modern Learning']" 
-                     :key="item" 
-                     class="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-full border border-white/20 hover:bg-white/20 transition-colors">
-                  {{ item }}
+          <!-- Career Services Section -->
+          <section class="py-24 px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+              <div class="text-center mb-16 slide-up">
+                <span class="text-base font-semibold text-electric tracking-widest uppercase mb-4 block">Career Support</span>
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-midnight mb-6">
+                  From Learning to <span class="gradient-text">Leading</span>
+                </h2>
+              </div>
+
+              <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 stagger">
+                <div v-for="service in careerServices" :key="service.num" 
+                     class="text-center">
+                  <div class="w-20 h-20 gradient-bg rounded-2xl flex items-center justify-center mx-auto mb-6 pulse-glow">
+                    <i :data-lucide="service.icon" class="w-10 h-10 text-white"></i>
+                  </div>
+                  <div class="text-5xl font-display font-bold gradient-text mb-3">{{ service.num }}</div>
+                  <h4 class="text-xl font-display font-bold text-midnight mb-2">{{ service.title }}</h4>
+                  <p class="text-slate">{{ service.desc }}</p>
                 </div>
               </div>
             </div>
