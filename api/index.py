@@ -70,6 +70,7 @@ class LoginRequest(BaseModel):
 class NotificationCreate(BaseModel):
     title: str
     message: str
+    link: Optional[str] = None
     exam_date: Optional[str] = None
     exam_name: Optional[str] = None
     priority: PriorityEnum = PriorityEnum.medium
@@ -77,6 +78,7 @@ class NotificationCreate(BaseModel):
 class NotificationUpdate(BaseModel):
     title: Optional[str] = None
     message: Optional[str] = None
+    link: Optional[str] = None
     exam_date: Optional[str] = None
     exam_name: Optional[str] = None
     priority: Optional[PriorityEnum] = None
@@ -258,14 +260,15 @@ def create_notification(data: NotificationCreate, username=Depends(verify_token)
         # Convert empty strings to None for optional fields
         exam_date = data.exam_date if data.exam_date else None
         exam_name = data.exam_name if data.exam_name else None
+        link = data.link if data.link else None
 
         result = execute_query(
             """
-            INSERT INTO notifications (title, message, exam_date, exam_name, priority, created_by)
-            VALUES (%s,%s,%s,%s,%s,%s)
+            INSERT INTO notifications (title, message, link, exam_date, exam_name, priority, created_by)
+            VALUES (%s,%s,%s,%s,%s,%s,%s)
             RETURNING id
             """,
-            (data.title, data.message, exam_date, exam_name, data.priority.value, user["id"]),
+            (data.title, data.message, link, exam_date, exam_name, data.priority.value, user["id"]),
             fetch_one=True
         )
         
@@ -291,7 +294,10 @@ def update_notification(notification_id: int, data: NotificationUpdate, username
             updates.append("message = %s")
             params.append(data.message)
         
-        # Allow explicitly setting exam_date and exam_name to None
+        # Allow explicitly setting link, exam_date and exam_name to None
+        if data.link is not None:
+            updates.append("link = %s")
+            params.append(data.link if data.link else None)
         if data.exam_date is not None:
             updates.append("exam_date = %s")
             params.append(data.exam_date if data.exam_date else None)

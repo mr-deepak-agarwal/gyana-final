@@ -275,6 +275,11 @@
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
     }
     
+    .notification-card[style*="cursor: pointer"]:hover {
+      transform: translateX(8px) scale(1.02);
+      box-shadow: 0 8px 30px rgba(99, 102, 241, 0.15);
+    }
+    
     .notification-card.priority-high {
       border-left-color: #ef4444;
       background: linear-gradient(135deg, white 0%, rgba(239, 68, 68, 0.03) 100%);
@@ -637,7 +642,9 @@
                       <div class="space-y-4">
                         <div v-for="notification in notifications" 
                              :key="notification.id" 
-                             :class="['notification-card', 'priority-' + notification.priority]">
+                             :class="['notification-card', 'priority-' + notification.priority]"
+                             :style="notification.link ? 'cursor: pointer;' : ''"
+                             @click="notification.link ? window.open(notification.link, '_blank') : null">
                           <div class="flex items-start justify-between mb-3">
                             <span :class="['notification-badge', 'priority-' + notification.priority]">
                               {{ notification.priority }}
@@ -648,23 +655,31 @@
                             </div>
                           </div>
                           
-                          <h4 class="font-display font-bold text-base text-midnight mb-2">
-                            {{ notification.title }}
-                          </h4>
-                          
-                          <p class="text-sm text-slate leading-relaxed mb-3">
-                            {{ notification.message }}
-                          </p>
-                          
-                          <div v-if="notification.exam_name || notification.exam_date" 
-                               class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
-                            <div v-if="notification.exam_name" class="flex items-center space-x-2">
-                              <i data-lucide="graduation-cap" class="w-4 h-4 text-electric"></i>
-                              <span class="text-xs font-semibold text-midnight">{{ notification.exam_name }}</span>
+                          <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                              <h4 class="font-display font-bold text-base text-midnight mb-2">
+                                {{ notification.title }}
+                              </h4>
+                              
+                              <p class="text-sm text-slate leading-relaxed mb-3">
+                                {{ notification.message }}
+                              </p>
+                              
+                              <div v-if="notification.exam_name || notification.exam_date" 
+                                   class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
+                                <div v-if="notification.exam_name" class="flex items-center space-x-2">
+                                  <i data-lucide="graduation-cap" class="w-4 h-4 text-electric"></i>
+                                  <span class="text-xs font-semibold text-midnight">{{ notification.exam_name }}</span>
+                                </div>
+                                <div v-if="notification.exam_date" class="flex items-center space-x-2">
+                                  <i data-lucide="calendar" class="w-4 h-4 text-electric"></i>
+                                  <span class="text-xs font-semibold text-electric">{{ formatDate(notification.exam_date) }}</span>
+                                </div>
+                              </div>
                             </div>
-                            <div v-if="notification.exam_date" class="flex items-center space-x-2">
-                              <i data-lucide="calendar" class="w-4 h-4 text-electric"></i>
-                              <span class="text-xs font-semibold text-electric">{{ formatDate(notification.exam_date) }}</span>
+                            
+                            <div v-if="notification.link" class="ml-3 flex-shrink-0">
+                              <i data-lucide="external-link" class="w-5 h-5 text-electric"></i>
                             </div>
                           </div>
                         </div>
