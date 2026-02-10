@@ -151,14 +151,21 @@ def execute_query(query, params=None, fetch_one=False, fetch_all=False):
         print(f"With params: {params}")
         
         cur.execute(query, params)
+        
+        # Determine if this is a write operation
+        is_write = query.strip().upper().startswith(('INSERT', 'UPDATE', 'DELETE'))
 
         if fetch_one:
             result = cur.fetchone()
         elif fetch_all:
             result = cur.fetchall()
         else:
-            conn.commit()
             result = None
+        
+        # Commit if it's a write operation
+        if is_write:
+            conn.commit()
+            print("Transaction committed")
 
         cur.close()
         print(f"Query executed successfully. Result: {result}")
