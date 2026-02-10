@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Resources | Gyana Coaching Institute</title>
+  <meta name="description" content="Access study materials, notes, and video lectures for BA, BSc, BCom, BCA courses">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'display': ['Syne', 'sans-serif'],
+            'body': ['Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            'electric': '#6366f1',
+            'coral': '#ff6b6b',
+            'mint': '#10b981',
+            'sunny': '#fbbf24',
+            'midnight': '#0f172a',
+            'slate': '#64748b',
+            'cloud': '#f8fafc',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+    }
+    
+    .font-display { font-family: 'Syne', sans-serif; }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #6366f1 0%, #ec4899 50%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    }
+    
+    .card-hover {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    .tab {
+      padding: 12px 24px;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-weight: 600;
+      color: #64748b;
+      transition: all 0.3s;
+    }
+    
+    .tab.active {
+      color: #6366f1;
+      border-bottom-color: #6366f1;
+    }
+    
+    .resource-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      border: 2px solid #e2e8f0;
+      transition: all 0.3s;
+    }
+    
+    .resource-card:hover {
+      border-color: #6366f1;
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+      transform: translateY(-2px);
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .badge-pdf {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+    
+    .badge-video {
+      background: #dbeafe;
+      color: #2563eb;
+    }
+    
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+    }
+    
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app"></div>
+
+  <script type="module">
+    import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+
+    createApp({
+      data() {
+        return {
+          loading: true,
+          selectedCourse: 'B.Sc',
+          selectedSemester: '1',
+          notes: [],
+          videos: [],
+          courses: ['B.Sc', 'B.A', 'B.Com', 'B.C.A'],
+          semesters: ['1', '2', '3', '4', '5', '6', '7', '8'],
+          activeTab: 'notes'
+        };
+      },
+      computed: {
+        filteredNotes() {
+          return this.notes.filter(note => 
+            note.course === this.selectedCourse && 
+            note.semester === this.selectedSemester &&
+            note.is_active
+          );
+        },
+        filteredVideos() {
+          return this.videos.filter(video => 
+            video.course === this.selectedCourse && 
+            video.semester === this.selectedSemester &&
+            video.is_active
+          );
+        },
+        groupedByTopic() {
+          const grouped = {};
+          
+          if (this.activeTab === 'notes') {
+            this.filteredNotes.forEach(note => {
+              if (!grouped[note.topic]) {
+                grouped[note.topic] = { notes: [], videos: [] };
+              }
+              grouped[note.topic].notes.push(note);
+            });
+          } else {
+            this.filteredVideos.forEach(video => {
+              if (!grouped[video.topic]) {
+                grouped[video.topic] = { notes: [], videos: [] };
+              }
+              grouped[video.topic].videos.push(video);
+            });
+          }
+          
+          return grouped;
+        }
+      },
+      async mounted() {
+        await this.loadResources();
+        lucide.createIcons();
+      },
+      watch: {
+        selectedCourse() { lucide.createIcons(); },
+        selectedSemester() { lucide.createIcons(); },
+        activeTab() { lucide.createIcons(); }
+      },
+      methods: {
+        async loadResources() {
+          this.loading = true;
+          try {
+            const [notesRes, videosRes] = await Promise.all([
+              fetch(`${window.location.origin}/api/notes`),
+              fetch(`${window.location.origin}/api/videos`)
+            ]);
+            
+            if (notesRes.ok) this.notes = await notesRes.json();
+            if (videosRes.ok) this.videos = await videosRes.json();
+          } catch (error) {
+            console.error('Error loading resources:', error);
+          } finally {
+            this.loading = false;
+            setTimeout(() => lucide.createIcons(), 100);
+          }
+        },
+        
+        async downloadNote(noteId, pdfUrl) {
+          try {
+            // Track download
+            await fetch(`${window.location.origin}/api/notes/${noteId}/download`, {
+              method: 'POST'
+            });
+            
+            // Open PDF in new tab
+            window.open(pdfUrl, '_blank');
+          } catch (error) {
+            console.error('Error downloading note:', error);
+          }
+        },
+        
+        async trackVideoView(videoId, youtubeUrl) {
+          try {
+            // Track view
+            await fetch(`${window.location.origin}/api/videos/${videoId}/view`, {
+              method: 'POST'
+            });
+            
+            // Open video in new tab
+            window.open(youtubeUrl, '_blank');
+          } catch (error) {
+            console.error('Error tracking video view:', error);
+          }
+        },
+        
+        getYouTubeThumbnail(url) {
+          const videoId = this.extractYouTubeId(url);
+          return videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : '';
+        },
+        
+        extractYouTubeId(url) {
+          const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+          const match = url.match(regex);
+          return match ? match[1] : null;
+        },
+        
+        formatFileSize(kb) {
+          if (!kb) return 'N/A';
+          if (kb < 1024) return `${kb} KB`;
+          return `${(kb / 1024).toFixed(2)} MB`;
+        },
+        
+        formatDuration(minutes) {
+          if (!minutes) return 'N/A';
+          const hrs = Math.floor(minutes / 60);
+          const mins = minutes % 60;
+          return hrs > 0 ? `${hrs}h ${mins}m` : `${mins}m`;
+        }
+      },
+      template: `
+        <div class="min-h-screen">
+          <!-- Navigation -->
+          <nav class="bg-white shadow-sm sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+              <div class="flex items-center justify-between h-20">
+                <a href="index.html" class="flex items-center space-x-3 group">
+                  <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <i data-lucide="sparkles" class="text-white w-6 h-6"></i>
+                  </div>
+                  <span class="text-2xl font-display font-bold text-midnight">Gyana</span>
+                </a>
+                
+                <a href="index.html" class="text-slate hover:text-electric transition-colors flex items-center space-x-2">
+                  <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                  <span>Back to Home</span>
+                </a>
+              </div>
+            </div>
+          </nav>
+
+          <!-- Hero -->
+          <section class="gradient-bg py-16 px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto text-center">
+              <h1 class="text-4xl md:text-5xl font-display font-bold text-white mb-4">
+                Learning Resources
+              </h1>
+              <p class="text-xl text-white/80 max-w-2xl mx-auto">
+                Access comprehensive study materials, notes, and video lectures for all courses
+              </p>
+            </div>
+          </section>
+
+          <!-- Filters -->
+          <section class="py-8 px-6 lg:px-8 bg-white border-b">
+            <div class="max-w-7xl mx-auto">
+              <div class="flex flex-col md:flex-row gap-6 items-center justify-between">
+                <!-- Course Filter -->
+                <div class="w-full md:w-auto">
+                  <label class="block text-sm font-semibold text-midnight mb-2">Select Course</label>
+                  <div class="flex gap-2 flex-wrap">
+                    <button 
+                      v-for="course in courses" 
+                      :key="course"
+                      @click="selectedCourse = course"
+                      :class="[
+                        'px-6 py-3 rounded-full font-semibold transition-all',
+                        selectedCourse === course 
+                          ? 'gradient-bg text-white shadow-lg' 
+                          : 'bg-gray-100 text-slate hover:bg-gray-200'
+                      ]">
+                      {{ course }}
+                    </button>
+                  </div>
+                </div>
+                
+                <!-- Semester Filter -->
+                <div class="w-full md:w-auto">
+                  <label class="block text-sm font-semibold text-midnight mb-2">Select Semester</label>
+                  <select 
+                    v-model="selectedSemester" 
+                    class="px-6 py-3 border-2 border-gray-200 rounded-full font-semibold focus:border-electric focus:outline-none">
+                    <option v-for="sem in semesters" :key="sem" :value="sem">
+                      Semester {{ sem }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Content Tabs -->
+          <section class="py-8 px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+              <!-- Tab Headers -->
+              <div class="flex border-b mb-8">
+                <div 
+                  @click="activeTab = 'notes'" 
+                  :class="['tab', { active: activeTab === 'notes' }]">
+                  <i data-lucide="file-text" class="w-4 h-4 inline mr-2"></i>
+                  Study Notes ({{ filteredNotes.length }})
+                </div>
+                <div 
+                  @click="activeTab = 'videos'" 
+                  :class="['tab', { active: activeTab === 'videos' }]">
+                  <i data-lucide="play-circle" class="w-4 h-4 inline mr-2"></i>
+                  Video Lectures ({{ filteredVideos.length }})
+                </div>
+              </div>
+
+              <!-- Loading State -->
+              <div v-if="loading" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div v-for="i in 6" :key="i" class="resource-card">
+                  <div class="skeleton h-6 w-3/4 mb-4 rounded"></div>
+                  <div class="skeleton h-4 w-full mb-2 rounded"></div>
+                  <div class="skeleton h-4 w-2/3 rounded"></div>
+                </div>
+              </div>
+
+              <!-- Notes Tab -->
+              <div v-else-if="activeTab === 'notes'">
+                <div v-if="filteredNotes.length === 0" class="text-center py-16">
+                  <i data-lucide="inbox" class="w-20 h-20 mx-auto text-gray-300 mb-4"></i>
+                  <h3 class="text-2xl font-display font-bold text-midnight mb-2">No Notes Available</h3>
+                  <p class="text-slate">Check back later for study materials</p>
+                </div>
+
+                <div v-else>
+                  <div v-for="(resources, topic) in groupedByTopic" :key="topic" class="mb-12">
+                    <h3 class="text-2xl font-display font-bold text-midnight mb-6 flex items-center">
+                      <i data-lucide="bookmark" class="w-6 h-6 mr-3 text-electric"></i>
+                      {{ topic }}
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      <div v-for="note in resources.notes" :key="note.id" class="resource-card card-hover">
+                        <div class="flex items-start justify-between mb-4">
+                          <span class="badge badge-pdf">PDF</span>
+                          <span class="text-xs text-slate">{{ formatFileSize(note.file_size_kb) }}</span>
+                        </div>
+                        
+                        <h4 class="font-display font-bold text-lg text-midnight mb-2">
+                          {{ note.title }}
+                        </h4>
+                        
+                        <p v-if="note.description" class="text-sm text-slate mb-4 line-clamp-2">
+                          {{ note.description }}
+                        </p>
+                        
+                        <div class="flex items-center justify-between mt-4 pt-4 border-t">
+                          <div class="flex items-center space-x-4 text-xs text-slate">
+                            <span class="flex items-center">
+                              <i data-lucide="download" class="w-3 h-3 mr-1"></i>
+                              {{ note.downloads || 0 }}
+                            </span>
+                          </div>
+                          
+                          <button 
+                            @click="downloadNote(note.id, note.pdf_url)"
+                            class="px-4 py-2 gradient-bg text-white rounded-full font-semibold text-sm hover:scale-105 transition-transform flex items-center space-x-2">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                            <span>Download</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Videos Tab -->
+              <div v-else-if="activeTab === 'videos'">
+                <div v-if="filteredVideos.length === 0" class="text-center py-16">
+                  <i data-lucide="video-off" class="w-20 h-20 mx-auto text-gray-300 mb-4"></i>
+                  <h3 class="text-2xl font-display font-bold text-midnight mb-2">No Videos Available</h3>
+                  <p class="text-slate">Check back later for video lectures</p>
+                </div>
+
+                <div v-else>
+                  <div v-for="(resources, topic) in groupedByTopic" :key="topic" class="mb-12">
+                    <h3 class="text-2xl font-display font-bold text-midnight mb-6 flex items-center">
+                      <i data-lucide="bookmark" class="w-6 h-6 mr-3 text-electric"></i>
+                      {{ topic }}
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      <div v-for="video in resources.videos" :key="video.id" class="resource-card card-hover">
+                        <!-- Thumbnail -->
+                        <div class="relative mb-4 rounded-lg overflow-hidden bg-gray-100 aspect-video">
+                          <img 
+                            :src="getYouTubeThumbnail(video.youtube_url)" 
+                            :alt="video.title"
+                            class="w-full h-full object-cover"
+                            @error="$event.target.src = 'https://via.placeholder.com/480x360?text=Video'"
+                          >
+                          <div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                            <i data-lucide="play-circle" class="w-12 h-12 text-white"></i>
+                          </div>
+                        </div>
+                        
+                        <div class="flex items-start justify-between mb-3">
+                          <span class="badge badge-video">VIDEO</span>
+                          <span class="text-xs text-slate">{{ formatDuration(video.duration_minutes) }}</span>
+                        </div>
+                        
+                        <h4 class="font-display font-bold text-lg text-midnight mb-2">
+                          {{ video.title }}
+                        </h4>
+                        
+                        <p v-if="video.description" class="text-sm text-slate mb-4 line-clamp-2">
+                          {{ video.description }}
+                        </p>
+                        
+                        <div class="flex items-center justify-between mt-4 pt-4 border-t">
+                          <div class="flex items-center space-x-4 text-xs text-slate">
+                            <span class="flex items-center">
+                              <i data-lucide="eye" class="w-3 h-3 mr-1"></i>
+                              {{ video.views || 0 }}
+                            </span>
+                          </div>
+                          
+                          <button 
+                            @click="trackVideoView(video.id, video.youtube_url)"
+                            class="px-4 py-2 gradient-bg text-white rounded-full font-semibold text-sm hover:scale-105 transition-transform flex items-center space-x-2">
+                            <i data-lucide="play" class="w-4 h-4"></i>
+                            <span>Watch</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Footer -->
+          <footer class="py-10 px-6 bg-midnight mt-16">
+            <div class="max-w-7xl mx-auto text-center">
+              <div class="flex items-center justify-center space-x-3 mb-4">
+                <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
+                  <i data-lucide="sparkles" class="text-white w-5 h-5"></i>
+                </div>
+                <span class="text-xl font-display font-bold text-white">Gyana</span>
+              </div>
+              <p class="text-white/40 text-sm">© 2026 Gyana Coaching Institute. All rights reserved.</p>
+            </div>
+          </footer>
+        </div>
+      `
+    }).mount('#app');
+
+    // Initialize icons
+    setTimeout(() => lucide.createIcons(), 100);
+  </script>
+</body>
+</html>

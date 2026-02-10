@@ -376,6 +376,7 @@
                       <th>Course</th>
                       <th>Semester</th>
                       <th>Topic</th>
+                      <th>PDF Link</th>
                       <th>Downloads</th>
                       <th>Status</th>
                       <th>Actions</th>
@@ -387,6 +388,13 @@
                       <td>{{ note.course }}</td>
                       <td>Sem {{ note.semester }}</td>
                       <td>{{ note.topic }}</td>
+                      <td>
+                        <a v-if="note.pdf_url" :href="note.pdf_url" target="_blank" class="text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                          <i data-lucide="external-link" class="w-4 h-4"></i>
+                          <span class="text-xs">View PDF</span>
+                        </a>
+                        <span v-else class="text-gray-400">N/A</span>
+                      </td>
                       <td>{{ note.downloads }}</td>
                       <td>
                         <span class="badge" :class="note.is_active ? 'badge-active' : 'badge-inactive'">
@@ -1164,9 +1172,15 @@
             
             const method = this.editingVideo ? 'PUT' : 'POST';
             
+            // Prepare data with semester as string
+            const videoData = {
+              ...this.videoForm,
+              semester: String(this.videoForm.semester)
+            };
+            
             await this.apiRequest(endpoint, {
               method,
-              body: JSON.stringify(this.videoForm)
+              body: JSON.stringify(videoData)
             });
             
             await this.loadVideos();
