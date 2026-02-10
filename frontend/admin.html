@@ -6,6 +6,7 @@
   <title>Admin Dashboard - Gyana Education Hub</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
@@ -551,8 +552,33 @@
           </div>
           
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">PDF URL *</label>
-            <input v-model="noteForm.pdf_url" type="url" required class="form-input" placeholder="https://example.com/file.pdf">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">PDF File *</label>
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-500 transition-colors">
+              <input 
+                type="file" 
+                @change="handleFileChange" 
+                accept=".pdf"
+                :required="!editingNote"
+                class="hidden" 
+                id="pdfFile"
+              >
+              <label for="pdfFile" class="cursor-pointer">
+                <i data-lucide="upload-cloud" class="w-12 h-12 mx-auto text-gray-400 mb-2"></i>
+                <p class="text-sm text-gray-600">
+                  {{ selectedFile ? selectedFile.name : 'Click to upload PDF' }}
+                </p>
+                <p class="text-xs text-gray-400 mt-1">
+                  {{ selectedFile ? `${(selectedFile.size / 1024).toFixed(2)} KB` : 'Max 10MB' }}
+                </p>
+              </label>
+            </div>
+            <div v-if="uploadProgress > 0 && uploadProgress < 100" class="mt-2">
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-indigo-600 h-2 rounded-full transition-all" :style="{width: uploadProgress + '%'}"></div>
+              </div>
+              <p class="text-xs text-gray-600 mt-1 text-center">Uploading... {{ uploadProgress }}%</p>
+            </div>
+            <input v-model="noteForm.pdf_url" type="hidden">
           </div>
           
           <div class="grid grid-cols-3 gap-4">
@@ -682,6 +708,12 @@
     import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
 
     const API_URL = window.location.origin;
+    
+    // Supabase Configuration - Replace with your credentials
+    const SUPABASE_URL = 'https://lwzlxzupsewedvczcjgh.supabase.co';  // e.g., 'https://xxxxx.supabase.co'
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3emx4enVwc2V3ZWR2Y3pjamdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1OTkxNTIsImV4cCI6MjA4NjE3NTE1Mn0.9bcReQ-oe4_g2Prt8QIkC5kOFg5demwowUq4Z4-Yg4I';
+    
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     createApp({
       data() {
@@ -734,6 +766,9 @@
             file_size_kb: null,
             is_active: true
           },
+          
+          selectedFile: null,
+          uploadProgress: 0,
           
           videoForm: {
             title: '',
@@ -1000,10 +1035,24 @@
         closeNoteModal() {
           this.showNoteModal = false;
           this.editingNote = null;
+          this.selectedFile = null;
+          this.uploadProgress = 0;
+          const fileInput = document.getElementById('pdfFile');
+          if (fileInput) fileInput.value = '';
         },
         
         async saveNote() {
           try {
+            // Upload file first if there's a new file
+            if (this.selectedFile) {
+              await this.uploadFile();
+            }
+            
+            // Calculate file size if we have it
+            if (this.selectedFile) {
+              this.noteForm.file_size_kb = Math.round(this.selectedFile.size / 1024);
+            }
+            
             const endpoint = this.editingNote 
               ? `/api/notes/${this.editingNote.id}`
               : '/api/notes';
@@ -1020,6 +1069,60 @@
             this.closeNoteModal();
           } catch (error) {
             alert('Error saving note: ' + error.message);
+          }
+        },
+        
+        handleFileChange(event) {
+          const file = event.target.files[0];
+          if (file) {
+            if (file.size > 10 * 1024 * 1024) { // 10MB limit
+              alert('File size must be less than 10MB');
+              event.target.value = '';
+              return;
+            }
+            if (!file.type.includes('pdf')) {
+              alert('Please upload a PDF file');
+              event.target.value = '';
+              return;
+            }
+            this.selectedFile = file;
+          }
+        },
+        
+        async uploadFile() {
+          if (!this.selectedFile) return;
+          
+          this.uploadProgress = 0;
+          
+          // Create unique filename
+          const timestamp = Date.now();
+          const fileName = `${timestamp}_${this.selectedFile.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+          const filePath = `notes/${fileName}`;
+          
+          try {
+            const { data, error } = await supabase.storage
+              .from('gyana-files')  // Your bucket name
+              .upload(filePath, this.selectedFile, {
+                cacheControl: '3600',
+                upsert: false,
+                onUploadProgress: (progress) => {
+                  this.uploadProgress = Math.round((progress.loaded / progress.total) * 100);
+                }
+              });
+            
+            if (error) throw error;
+            
+            // Get public URL
+            const { data: { publicUrl } } = supabase.storage
+              .from('gyana-files')
+              .getPublicUrl(filePath);
+            
+            this.noteForm.pdf_url = publicUrl;
+            this.uploadProgress = 100;
+            
+          } catch (error) {
+            console.error('Upload error:', error);
+            throw new Error('File upload failed: ' + error.message);
           }
         },
         
