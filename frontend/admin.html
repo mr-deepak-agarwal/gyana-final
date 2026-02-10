@@ -849,26 +849,33 @@
           ]);
           setTimeout(() => lucide.createIcons(), 100);
         },
-        
+
         async apiRequest(endpoint, options = {}) {
-          const headers = {
-            'Content-Type': 'application/json',
-            ...(this.token && { 'Authorization': `Bearer ${this.token}` }),
-            ...options.headers
-          };
-          
-          const response = await fetch(`${API_URL}${endpoint}`, {
+          const token = localStorage.getItem("token");
+
+          const response = await fetch(`${API_BASE}${endpoint}`, {
             ...options,
-            headers
+            headers: {
+              "Content-Type": "application/json",
+              ...(token ? { "Authorization": `Bearer ${token}` } : {}),
+              ...(options.headers || {})
+            }
           });
-          
-          if (response.status === 401) {
-            this.logout();
-            throw new Error('Unauthorized');
+
+          if (!response.ok) {
+            let errorMsg = "API request failed";
+            try {
+              const err = await response.json();
+              errorMsg = err.detail || err.message || errorMsg;
+            } catch (e) {}
+            throw new Error(errorMsg);
           }
-          
-          return response;
-        },
+
+  // Return JSON if any
+          if (response.status !== 204) {
+            return response.json();
+          }
+        }
         
         async loadNotifications() {
           try {
@@ -1042,55 +1049,46 @@
           if (fileInput) fileInput.value = '';
         },
         
+
         async saveNote() {
           try {
-            // Upload file first if there's a new file
+    // 1️⃣ Upload file first
             if (this.selectedFile) {
               await this.uploadFile();
-            }
-            
-            // Calculate file size if we have it
-            if (this.selectedFile) {
               this.noteForm.file_size_kb = Math.round(this.selectedFile.size / 1024);
             }
-            
-            const endpoint = this.editingNote 
+
+            const endpoint = this.editingNote
             ? `/api/notes/${this.editingNote.id}`
-            : '/api/notes';
-            
-            const method = this.editingNote ? 'PUT' : 'POST';
-            
+            : "/api/notes";
+
+            const method = this.editingNote ? "PUT" : "POST";
+
+    // 2️⃣ Save note in DB (JWT now sent automatically)
             await this.apiRequest(endpoint, {
               method,
-              body: JSON.stringify(this.noteForm)
+              body: JSON.stringify({
+                title: this.noteForm.title,
+                description: this.noteForm.description,
+                pdf_url: this.noteForm.pdf_url,
+                course: this.noteForm.course,
+                semester: String(this.noteForm.semester),
+                topic: this.noteForm.topic,
+                file_size_kb: this.noteForm.file_size_kb,
+                ...(this.editingNote ? { is_active: this.noteForm.is_active } : {})
+              })
             });
-            
+
+    // 3️⃣ Refresh UI
             await this.loadNotes();
             await this.loadTopics();
             this.closeNoteModal();
+
           } catch (error) {
-            alert('Error saving note: ' + error.message);
+            console.error("SAVE NOTE ERROR:", error);
+            alert("Error saving note: " + error.message);
           }
-        },
-        
-        handleFileChange(event) {
-          const file = event.target.files[0];
-          if (file) {
-            if (file.size > 10 * 1024 * 1024) { // 10MB limit
-              alert('File size must be less than 10MB');
-              event.target.value = '';
-              return;
-            }
-            if (!file.type.includes('pdf')) {
-              alert('Please upload a PDF file');
-              event.target.value = '';
-              return;
-            }
-            this.selectedFile = file;
-          }
-        },
-        
-        async uploadFile() {
+        }        async uploadFile() {
           if (!this.selectedFile) return;
           
           this.uploadProgress = 0;
@@ -1110,23 +1108,23 @@
                   this.uploadProgress = Math.round((progress.loaded / progress.total) * 100);
                 }
               });
-              
+
               if (error) throw error;
-              
+
             // Get public URL
               const { data: { publicUrl } } = supabaseClient.storage
               .from('gyana-files')
               .getPublicUrl(filePath);
-              
+
               this.noteForm.pdf_url = publicUrl;
               this.uploadProgress = 100;
-              
+
             } catch (error) {
               console.error('Upload error:', error);
               throw new Error('File upload failed: ' + error.message);
             }
           },
-          
+
           async deleteNote(id) {
             if (confirm('Are you sure you want to delete this note?')) {
               try {
@@ -1138,7 +1136,7 @@
               }
             }
           },
-          
+
         // Video methods
           openVideoModal(video = null) {
             if (video) {
@@ -1169,25 +1167,25 @@
             this.showVideoModal = true;
             setTimeout(() => lucide.createIcons(), 100);
           },
-          
+
           closeVideoModal() {
             this.showVideoModal = false;
             this.editingVideo = null;
           },
-          
+
           async saveVideo() {
             try {
               const endpoint = this.editingVideo 
               ? `/api/videos/${this.editingVideo.id}`
               : '/api/videos';
-              
+
               const method = this.editingVideo ? 'PUT' : 'POST';
-              
+
               await this.apiRequest(endpoint, {
                 method,
                 body: JSON.stringify(this.videoForm)
               });
-              
+
               await this.loadVideos();
               await this.loadTopics();
               this.closeVideoModal();
@@ -1195,7 +1193,7 @@
               alert('Error saving video: ' + error.message);
             }
           },
-          
+
           async deleteVideo(id) {
             if (confirm('Are you sure you want to delete this video?')) {
               try {
@@ -1207,7 +1205,7 @@
               }
             }
           },
-          
+
           formatDate(date) {
             if (!date) return 'N/A';
             return new Date(date).toLocaleDateString();
