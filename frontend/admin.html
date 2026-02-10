@@ -854,11 +854,11 @@
           const token = localStorage.getItem("token");
 
           const response = await fetch(`${API_BASE}${endpoint}`, {
-            ...options,
+            options,
             headers: {
               "Content-Type": "application/json",
-              ...(token ? { "Authorization": `Bearer ${token}` } : {}),
-              ...(options.headers || {})
+              (token ? { "Authorization": `Bearer ${token}` } : {}),
+              (options.headers || {})
             }
           });
 
@@ -1075,7 +1075,7 @@
                 semester: String(this.noteForm.semester),
                 topic: this.noteForm.topic,
                 file_size_kb: this.noteForm.file_size_kb,
-                ...(this.editingNote ? { is_active: this.noteForm.is_active } : {})
+                (this.editingNote ? { is_active: this.noteForm.is_active } : {})
               })
             });
 
