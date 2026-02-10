@@ -521,6 +521,11 @@
           } catch (error) {
             console.error('Form submission error:', error);
           }
+        },
+        openNotificationLink(link) {
+          if (link && link.trim()) {
+            window.open(link, '_blank');
+          }
         }
       },
       template: `
@@ -644,7 +649,7 @@
                              :key="notification.id" 
                              :class="['notification-card', 'priority-' + notification.priority]"
                              :style="notification.link ? 'cursor: pointer;' : ''"
-                             @click="notification.link ? window.open(notification.link, '_blank') : null">
+                             @click="openNotificationLink(notification.link)">
                           <div class="flex items-start justify-between mb-3">
                             <span :class="['notification-badge', 'priority-' + notification.priority]">
                               {{ notification.priority }}
