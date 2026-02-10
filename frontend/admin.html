@@ -46,7 +46,7 @@
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
     }
-    
+
     .btn-secondary {
       background: white;
       color: #6366f1;
@@ -563,12 +563,12 @@
             <label class="block text-sm font-semibold text-gray-700 mb-2">PDF File *</label>
             <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-500 transition-colors">
               <input 
-                type="file" 
-                @change="handleFileChange" 
-                accept=".pdf"
-                :required="!editingNote"
-                class="hidden" 
-                id="pdfFile"
+              type="file" 
+              @change="handleFileChange" 
+              accept=".pdf"
+              :required="!editingNote"
+              class="hidden" 
+              id="pdfFile"
               >
               <label for="pdfFile" class="cursor-pointer">
                 <i data-lucide="upload-cloud" class="w-12 h-12 mx-auto text-gray-400 mb-2"></i>
@@ -750,7 +750,7 @@
           showNotificationModal: false,
           showNoteModal: false,
           showVideoModal: false,
-          
+
           editingNotification: null,
           editingNote: null,
           editingVideo: null,
@@ -827,7 +827,7 @@
               
               localStorage.setItem('admin_token', this.token);
               localStorage.setItem('admin_username', this.username);
-              
+
               await this.loadData();
             } else {
               this.loginError = data.detail || 'Login failed';
@@ -847,7 +847,7 @@
           localStorage.removeItem('admin_token');
           localStorage.removeItem('admin_username');
         },
-        
+
         async loadData() {
           await Promise.all([
             this.loadNotifications(),
@@ -857,7 +857,7 @@
           ]);
           setTimeout(() => lucide.createIcons(), 100);
         },
-        
+
         async apiRequest(endpoint, options = {}) {
           const headers = {
             'Content-Type': 'application/json',
@@ -907,7 +907,7 @@
             console.error('Error loading videos:', error);
           }
         },
-        
+
         async loadTopics() {
           try {
             const response = await this.apiRequest('/api/topics');
@@ -937,7 +937,7 @@
         
         async uploadFile() {
           if (!this.selectedFile) return;
-          
+
           this.uploadProgress = 0;
           
           const timestamp = Date.now();
@@ -946,17 +946,17 @@
           
           try {
             const { data, error } = await supabaseClient.storage
-              .from('gyana-files')
-              .upload(filePath, this.selectedFile, {
-                cacheControl: '3600',
-                upsert: false
-              });
+            .from('gyana-files')
+            .upload(filePath, this.selectedFile, {
+              cacheControl: '3600',
+              upsert: false
+            });
             
             if (error) throw error;
             
             const { data: { publicUrl } } = supabaseClient.storage
-              .from('gyana-files')
-              .getPublicUrl(filePath);
+            .from('gyana-files')
+            .getPublicUrl(filePath);
             
             this.noteForm.pdf_url = publicUrl;
             this.uploadProgress = 100;
@@ -1003,8 +1003,8 @@
         async saveNotification() {
           try {
             const endpoint = this.editingNotification 
-              ? `/api/notifications/${this.editingNotification.id}`
-              : '/api/notifications';
+            ? `/api/notifications/${this.editingNotification.id}`
+            : '/api/notifications';
             
             const method = this.editingNotification ? 'PUT' : 'POST';
             
@@ -1093,9 +1093,9 @@
             }
             
             const endpoint = this.editingNote 
-              ? `/api/notes/${this.editingNote.id}`
-              : '/api/notes';
-            
+            ? `/api/notes/${this.editingNote.id}`
+            : '/api/notes';
+
             const method = this.editingNote ? 'PUT' : 'POST';
             
             // Prepare data with semester as string
@@ -1128,7 +1128,7 @@
             }
           }
         },
-        
+
         openVideoModal(video = null) {
           if (video) {
             this.editingVideo = video;
@@ -1167,8 +1167,8 @@
         async saveVideo() {
           try {
             const endpoint = this.editingVideo 
-              ? `/api/videos/${this.editingVideo.id}`
-              : '/api/videos';
+            ? `/api/videos/${this.editingVideo.id}`
+            : '/api/videos';
             
             const method = this.editingVideo ? 'PUT' : 'POST';
             
@@ -1202,7 +1202,6 @@
             }
           }
         },
-        
         formatDate(date) {
           if (!date) return 'N/A';
           return new Date(date).toLocaleDateString();
@@ -1212,3 +1211,4 @@
   </script>
 </body>
 </html>
+
