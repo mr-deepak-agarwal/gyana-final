@@ -821,31 +821,34 @@
         
         async loadNotifications() {
           try {
-            const response = await this.apiRequest('/api/notifications?is_active=');
+            const response = await this.apiRequest('/api/notifications');
             this.notifications = await response.json();
             this.stats.notifications = this.notifications.length;
           } catch (error) {
             console.error('Error loading notifications:', error);
+            alert('Failed to load notifications: ' + error.message);
           }
         },
         
         async loadNotes() {
           try {
-            const response = await this.apiRequest('/api/notes?is_active=');
+            const response = await this.apiRequest('/api/notes');
             this.notes = await response.json();
             this.stats.notes = this.notes.length;
           } catch (error) {
             console.error('Error loading notes:', error);
+            alert('Failed to load notes: ' + error.message);
           }
         },
         
         async loadVideos() {
           try {
-            const response = await this.apiRequest('/api/videos?is_active=');
+            const response = await this.apiRequest('/api/videos');
             this.videos = await response.json();
             this.stats.videos = this.videos.length;
           } catch (error) {
             console.error('Error loading videos:', error);
+            alert('Failed to load videos: ' + error.message);
           }
         },
         
@@ -899,14 +902,23 @@
             
             const method = this.editingNotification ? 'PUT' : 'POST';
             
-            await this.apiRequest(endpoint, {
+            console.log('Saving notification:', this.notificationForm);
+            console.log('Endpoint:', endpoint);
+            console.log('Method:', method);
+            
+            const response = await this.apiRequest(endpoint, {
               method,
               body: JSON.stringify(this.notificationForm)
             });
             
+            const result = await response.json();
+            console.log('Save response:', result);
+            
             await this.loadNotifications();
             this.closeNotificationModal();
+            alert('Notification saved successfully!');
           } catch (error) {
+            console.error('Error saving notification:', error);
             alert('Error saving notification: ' + error.message);
           }
         },
