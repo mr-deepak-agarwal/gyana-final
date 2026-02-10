@@ -247,6 +247,10 @@ def create_notification(data: NotificationCreate, username=Depends(verify_token)
             raise HTTPException(status_code=404, detail="User not found")
         
         print(f"User found: {user}")
+        
+        # Convert empty strings to None for optional fields
+        exam_date = data.exam_date if data.exam_date else None
+        exam_name = data.exam_name if data.exam_name else None
 
         result = execute_query(
             """
@@ -254,7 +258,7 @@ def create_notification(data: NotificationCreate, username=Depends(verify_token)
             VALUES (%s,%s,%s,%s,%s,%s)
             RETURNING id
             """,
-            (data.title, data.message, data.exam_date, data.exam_name, data.priority.value, user["id"]),
+            (data.title, data.message, exam_date, exam_name, data.priority.value, user["id"]),
             fetch_one=True
         )
         
@@ -279,12 +283,15 @@ def update_notification(notification_id: int, data: NotificationUpdate, username
         if data.message:
             updates.append("message = %s")
             params.append(data.message)
-        if data.exam_date:
+        
+        # Allow explicitly setting exam_date and exam_name to None
+        if data.exam_date is not None:
             updates.append("exam_date = %s")
-            params.append(data.exam_date)
-        if data.exam_name:
+            params.append(data.exam_date if data.exam_date else None)
+        if data.exam_name is not None:
             updates.append("exam_name = %s")
-            params.append(data.exam_name)
+            params.append(data.exam_name if data.exam_name else None)
+            
         if data.priority:
             updates.append("priority = %s")
             params.append(data.priority.value)

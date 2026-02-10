@@ -902,13 +902,27 @@
             
             const method = this.editingNotification ? 'PUT' : 'POST';
             
-            console.log('Saving notification:', this.notificationForm);
+            // Clean up the form data - convert empty strings to null for optional fields
+            const cleanedData = {
+              title: this.notificationForm.title,
+              message: this.notificationForm.message,
+              exam_name: this.notificationForm.exam_name || null,
+              exam_date: this.notificationForm.exam_date || null,
+              priority: this.notificationForm.priority
+            };
+            
+            // Only include is_active when editing
+            if (this.editingNotification) {
+              cleanedData.is_active = this.notificationForm.is_active;
+            }
+            
+            console.log('Saving notification:', cleanedData);
             console.log('Endpoint:', endpoint);
             console.log('Method:', method);
             
             const response = await this.apiRequest(endpoint, {
               method,
-              body: JSON.stringify(this.notificationForm)
+              body: JSON.stringify(cleanedData)
             });
             
             const result = await response.json();
