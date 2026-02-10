@@ -1090,9 +1090,15 @@
             
             const method = this.editingNote ? 'PUT' : 'POST';
             
+            // Prepare data with semester as string
+            const noteData = {
+              ...this.noteForm,
+              semester: String(this.noteForm.semester)
+            };
+            
             await this.apiRequest(endpoint, {
               method,
-              body: JSON.stringify(this.noteForm)
+              body: JSON.stringify(noteData)
             });
             
             await this.loadNotes();
