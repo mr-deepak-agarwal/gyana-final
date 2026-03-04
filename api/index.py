@@ -127,7 +127,7 @@ class StudentSubmission(BaseModel):
     email: str
     mobile: str
     currentCourse: str
-    collegeName: Optional[str] = None
+    collegeName: Optional[str] = None  # stored as residence_address
     class_year: Optional[str] = None
     goals: Optional[str] = None
     skills: Optional[str] = None
@@ -336,13 +336,25 @@ def delete_notification(notification_id: int, username=Depends(verify_token)):
         raise HTTPException(status_code=500, detail=f"Failed to delete notification: {str(e)}")
 
 # ---------------- STUDENT SUBMISSIONS ----------------
+@app.get("/api/submissions")
+def get_submissions(username=Depends(verify_token)):
+    try:
+        result = execute_query(
+            "SELECT * FROM student_submissions ORDER BY created_at DESC",
+            fetch_all=True
+        )
+        return result or []
+    except Exception as e:
+        print(f"Get submissions error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch submissions: {str(e)}")
+
 @app.post("/api/submit")
 def submit_student_form(data: StudentSubmission):
     try:
         result = execute_query(
             """
             INSERT INTO student_submissions 
-            (name, email, mobile, course, college_name, class_year, goals, current_skills, skills_to_learn)
+            (name, email, mobile, course, residence_address, class_year, goals, current_skills, skills_to_learn)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
             """,

@@ -278,6 +278,18 @@
               </div>
             </div>
           </div>
+
+          <div class="card p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-500">Enrollments</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1">{{ submissions.length }}</p>
+              </div>
+              <div class="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center">
+                <i data-lucide="users" class="text-pink-600 w-6 h-6"></i>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Tabs -->
@@ -294,6 +306,10 @@
             <div class="tab" :class="{ active: activeTab === 'videos' }" @click="activeTab = 'videos'">
               <i data-lucide="play-circle" class="w-4 h-4 inline mr-2"></i>
               Videos
+            </div>
+            <div class="tab" :class="{ active: activeTab === 'submissions' }" @click="activeTab = 'submissions'">
+              <i data-lucide="users" class="w-4 h-4 inline mr-2"></i>
+              Enrollments
             </div>
           </div>
           
@@ -463,12 +479,59 @@
                 </table>
               </div>
             </div>
+            <!-- Submissions Tab -->
+            <div v-if="activeTab === 'submissions'">
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-900">Enrollment Submissions</h2>
+                <div class="flex items-center gap-3">
+                  <input v-model="submissionSearch" type="text" class="form-input" style="width:220px" placeholder="Search name, email, course...">
+                  <span class="text-sm text-gray-500">{{ filteredSubmissions.length }} records</span>
+                </div>
+              </div>
+
+              <div v-if="submissions.length === 0" class="text-center py-16 text-gray-400">
+                <i data-lucide="inbox" class="w-12 h-12 mx-auto mb-3 opacity-40"></i>
+                <p class="text-lg font-medium">No submissions yet</p>
+                <p class="text-sm">Enrollment form submissions will appear here.</p>
+              </div>
+
+              <div v-else class="overflow-x-auto">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Mobile</th>
+                      <th>Course</th>
+                      <th>Year</th>
+                      <th>Residence Address</th>
+                      <th>Current Skills</th>
+                      <th>Skills Wanted</th>
+                      <th>Goals</th>
+                      <th>Submitted On</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(s, i) in filteredSubmissions" :key="s.id">
+                      <td class="text-gray-400 text-sm">{{ i + 1 }}</td>
+                      <td class="font-medium whitespace-nowrap">{{ s.name }}</td>
+                      <td class="text-blue-600 text-sm">{{ s.email }}</td>
+                      <td class="text-sm whitespace-nowrap">{{ s.mobile }}</td>
+                      <td><span class="badge badge-active">{{ s.course }}</span></td>
+                      <td class="text-sm">{{ s.class_year || '—' }}</td>
+                      <td class="text-sm max-w-xs truncate">{{ s.residence_address || '—' }}</td>
+                      <td class="text-sm max-w-xs truncate">{{ s.current_skills || '—' }}</td>
+                      <td class="text-sm max-w-xs truncate">{{ s.skills_to_learn || '—' }}</td>
+                      <td class="text-sm max-w-xs truncate">{{ s.goals || '—' }}</td>
+                      <td class="text-sm whitespace-nowrap text-gray-500">{{ formatDate(s.created_at) }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Notification Modal -->
     <div class="modal" :class="{ active: showNotificationModal }" @click="closeNotificationModal">
       <div class="modal-content" @click.stop>
         <div class="gradient-bg p-6 flex justify-between items-center">
@@ -740,6 +803,8 @@
           notifications: [],
           notes: [],
           videos: [],
+          submissions: [],
+          submissionSearch: '',
           allTopics: [],
           stats: {
             notifications: 0,
@@ -792,6 +857,19 @@
         };
       },
       
+      computed: {
+        filteredSubmissions() {
+          if (!this.submissionSearch.trim()) return this.submissions;
+          const q = this.submissionSearch.toLowerCase();
+          return this.submissions.filter(s =>
+            (s.name && s.name.toLowerCase().includes(q)) ||
+            (s.email && s.email.toLowerCase().includes(q)) ||
+            (s.mobile && s.mobile.includes(q)) ||
+            (s.course && s.course.toLowerCase().includes(q))
+          );
+        }
+      },
+
       mounted() {
         const savedToken = localStorage.getItem('admin_token');
         const savedUsername = localStorage.getItem('admin_username');
@@ -853,7 +931,8 @@
             this.loadNotifications(),
             this.loadNotes(),
             this.loadVideos(),
-            this.loadTopics()
+            this.loadTopics(),
+            this.loadSubmissions()
           ]);
           setTimeout(() => lucide.createIcons(), 100);
         },
@@ -915,6 +994,15 @@
             this.allTopics = data.topics;
           } catch (error) {
             console.error('Error loading topics:', error);
+          }
+        },
+
+        async loadSubmissions() {
+          try {
+            const response = await this.apiRequest('/api/submissions');
+            this.submissions = await response.json();
+          } catch (error) {
+            console.error('Error loading submissions:', error);
           }
         },
         
@@ -1211,4 +1299,3 @@
   </script>
 </body>
 </html>
-
