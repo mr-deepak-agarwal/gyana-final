@@ -209,11 +209,11 @@
         opacity: 1; 
         transform: translateY(0) scale(1); }
       }
-      
+
       .modal-animate {
         animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       }
-      
+
       /* Scrolling Notifications Container */
       .notifications-scroll-container {
         height: 550px;
@@ -224,41 +224,41 @@
         padding: 24px;
         border: 2px solid rgba(99, 102, 241, 0.1);
       }
-      
+
       .notifications-scroll-wrapper {
         height: 100%;
         overflow-y: auto;
         padding-right: 12px;
       }
-      
+
       .notifications-scroll-wrapper::-webkit-scrollbar {
         width: 6px;
       }
-      
+
       .notifications-scroll-wrapper::-webkit-scrollbar-track {
         background: rgba(99, 102, 241, 0.1);
         border-radius: 10px;
       }
-      
+
       .notifications-scroll-wrapper::-webkit-scrollbar-thumb {
         background: linear-gradient(135deg, #6366f1, #ec4899);
         border-radius: 10px;
       }
-      
+
       /* Auto-scroll animation */
       @keyframes autoScroll {
         0% { transform: translateY(0); }
         100% { transform: translateY(calc(-100% + 550px)); }
       }
-      
+
       .auto-scroll {
         animation: autoScroll 20s linear infinite;
       }
-      
+
       .auto-scroll:hover {
         animation-play-state: paused;
       }
-      
+
       /* Individual notification card */
       .notification-card {
         background: white;
@@ -269,32 +269,32 @@
         transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
       }
-      
+
       .notification-card:hover {
         transform: translateX(8px);
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
       }
-      
+
       .notification-card[style*="cursor: pointer"]:hover {
         transform: translateX(8px) scale(1.02);
         box-shadow: 0 8px 30px rgba(99, 102, 241, 0.15);
       }
-      
+
       .notification-card.priority-high {
         border-left-color: #ef4444;
         background: linear-gradient(135deg, white 0%, rgba(239, 68, 68, 0.03) 100%);
       }
-      
+
       .notification-card.priority-medium {
         border-left-color: #f59e0b;
         background: linear-gradient(135deg, white 0%, rgba(245, 158, 11, 0.03) 100%);
       }
-      
+
       .notification-card.priority-low {
         border-left-color: #3b82f6;
         background: linear-gradient(135deg, white 0%, rgba(59, 130, 246, 0.03) 100%);
       }
-      
+
       .notification-badge {
         display: inline-block;
         padding: 4px 12px;
@@ -304,22 +304,22 @@
         text-transform: uppercase;
         letter-spacing: 0.5px;
       }
-      
+
       .notification-badge.priority-high {
         background: rgba(239, 68, 68, 0.1);
         color: #ef4444;
       }
-      
+
       .notification-badge.priority-medium {
         background: rgba(245, 158, 11, 0.1);
         color: #f59e0b;
       }
-      
+
       .notification-badge.priority-low {
         background: rgba(59, 130, 246, 0.1);
         color: #3b82f6;
       }
-      
+
       /* Empty state */
       .empty-notifications {
         height: 100%;
@@ -330,7 +330,7 @@
         text-align: center;
         padding: 40px;
       }
-      
+
       .empty-notifications i {
         width: 80px;
         height: 80px;
@@ -534,11 +534,11 @@
           <nav :class="['fixed top-0 left-0 right-0 z-50 transition-all duration-500', 
                         scrollY > 50 ? 'bg-white/95 backdrop-blur-lg shadow-lg' : 'bg-transparent']">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
-              <div class="flex items-center justify-between h-20">
+              <div class="flex items-center justify-between h-28">
                 <!-- Logo -->
                 <a href="#" class="flex items-center group">
   <img src="gyana_final.png" alt="Gyana Logo" 
-       class="h-16 w-auto group-hover:scale-105 transition-transform duration-300">
+       class="h-24 w-auto group-hover:scale-105 transition-transform duration-300">
 </a>
 
                 <!-- Desktop Nav -->
@@ -584,7 +584,7 @@
             <!-- Background Elements -->
             <div class="absolute top-20 right-0 w-96 h-96 bg-gradient-to-br from-electric/20 to-purple-500/20 rounded-full blur-3xl float"></div>
             <div class="absolute bottom-20 left-0 w-80 h-80 bg-gradient-to-br from-pink-500/20 to-amber-500/20 rounded-full blur-3xl float-delay"></div>
-          
+
             <div class="max-w-7xl mx-auto relative">
               <div class="grid lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-8rem)]">
                 <!-- Left Content -->
@@ -593,16 +593,16 @@
                     <span class="w-2.5 h-2.5 bg-electric rounded-full animate-pulse"></span>
                     <span class="text-base font-semibold text-electric tracking-wide">NEP 2020 Certified</span>
                   </div>
-          
+
                   <h1 class="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-midnight leading-[1.1] mb-8">
                     The Right Path
                     <span class="block gradient-text">of Learning</span>
                   </h1>
-          
+
                   <p class="text-xl text-slate leading-relaxed mb-10 max-w-lg">
                     A new dimension to education, new wings to students. Quality, modern, and result-oriented education at Gyana Coaching Institute.
                   </p>
-          
+
                   <div class="flex flex-col sm:flex-row gap-5">
                     <button @click="showForm = true" class="btn-primary">
                       Start Your Journey
@@ -611,7 +611,7 @@
                       Explore Courses
                     </a>
                   </div>
-          
+
                   <!-- Stats -->
                   <div class="grid grid-cols-4 gap-6 mt-14 pt-10 border-t border-gray-200">
                     <div v-for="stat in stats" :key="stat.label" class="text-center">
@@ -639,7 +639,7 @@
                         {{ notifications.length }} New
                       </span>
                     </div>
-          
+
                     <!-- Notifications List -->
                     <div v-if="notifications.length > 0" class="notifications-scroll-wrapper">
                       <div class="space-y-4">
@@ -657,17 +657,17 @@
                               <span>{{ formatDate(notification.created_at) }}</span>
                             </div>
                           </div>
-          
+
                           <div class="flex items-start justify-between">
                             <div class="flex-1">
                               <h4 class="font-display font-bold text-base text-midnight mb-2">
                                 {{ notification.title }}
                               </h4>
-          
+
                               <p class="text-sm text-slate leading-relaxed mb-3">
                                 {{ notification.message }}
                               </p>
-          
+
                               <div v-if="notification.exam_name || notification.exam_date" 
                                    class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
                                 <div v-if="notification.exam_name" class="flex items-center space-x-2">
@@ -680,7 +680,7 @@
                                 </div>
                               </div>
                             </div>
-          
+
                             <div v-if="notification.link" class="ml-3 flex-shrink-0">
                               <i data-lucide="external-link" class="w-5 h-5 text-electric"></i>
                             </div>
@@ -688,7 +688,7 @@
                         </div>
                       </div>
                     </div>
-          
+
                     <!-- Empty State -->
                     <div v-else class="empty-notifications">
                       <i data-lucide="inbox" class="text-slate"></i>
@@ -704,7 +704,7 @@
           <!-- Courses Section -->
           <section id="Courses" class="py-24 px-6 lg:px-8 bg-cloud relative overflow-hidden">
             <div class="absolute top-0 left-0 w-96 h-96 bg-electric/10 rounded-full blur-3xl"></div>
-          
+
             <div class="max-w-7xl mx-auto relative">
               <div class="text-center mb-16 slide-up">
                 <span class="text-base font-semibold text-electric tracking-widest uppercase mb-4 block">Our Programs</span>
@@ -720,15 +720,15 @@
                 <div v-for="course in courses" :key="course.title" 
                      class="bg-white rounded-3xl p-8 shadow-xl card-hover border border-gray-100 relative overflow-hidden">
                   <div :class="['absolute top-0 right-0 w-32 h-32 rounded-full blur-2xl opacity-20 bg-gradient-to-br', course.color]"></div>
-          
+
                   <div class="relative">
                     <div :class="['w-16 h-16 rounded-2xl flex items-center justify-center mb-6 bg-gradient-to-br', course.color]">
                       <i :data-lucide="course.icon" class="w-8 h-8 text-white"></i>
                     </div>
-          
+
                     <h3 class="text-3xl font-display font-bold text-midnight mb-2">{{ course.title }}</h3>
                     <p class="text-slate mb-6">{{ course.fullName }}</p>
-          
+
                     <ul class="space-y-3">
                       <li v-for="feature in course.features" :key="feature" class="flex items-start space-x-3">
                         <i data-lucide="check-circle" class="w-5 h-5 text-electric flex-shrink-0 mt-0.5"></i>
@@ -766,7 +766,7 @@
           <!-- NEP 2020 Section -->
           <section class="py-24 px-6 lg:px-8 bg-midnight relative overflow-hidden">
             <div class="absolute top-0 right-0 w-96 h-96 bg-electric/20 rounded-full blur-3xl"></div>
-          
+
             <div class="max-w-7xl mx-auto relative">
               <div class="grid lg:grid-cols-2 gap-12 items-center">
                 <div class="slide-up">
@@ -777,7 +777,7 @@
                   <p class="text-xl text-white/60 leading-relaxed mb-8">
                     Experience transformative learning with India's progressive education framework.
                   </p>
-          
+
                   <div class="grid grid-cols-2 gap-4">
                     <div v-for="feature in nepFeatures" :key="feature" 
                          class="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
@@ -788,7 +788,7 @@
                     </div>
                   </div>
                 </div>
-          
+
                 <div class="slide-up">
                   <img :src="images.classroom" alt="Classroom" 
                        class="rounded-3xl shadow-2xl w-full h-[500px] object-cover">
@@ -824,7 +824,7 @@
           <!-- Contact Section -->
           <section id="Contact" class="py-24 px-6 lg:px-8 bg-midnight relative overflow-hidden">
             <div class="absolute top-0 right-0 w-96 h-96 bg-electric/20 rounded-full blur-3xl"></div>
-          
+
             <div class="max-w-7xl mx-auto relative">
               <div class="grid lg:grid-cols-2 gap-16">
                 <!-- Left -->
@@ -840,7 +840,7 @@
                     Apply Now
                   </button>
                 </div>
-          
+
                 <!-- Right -->
                 <div class="space-y-6 stagger">
                   <div class="bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10 card-hover">
@@ -854,7 +854,7 @@
                       </div>
                     </div>
                   </div>
-          
+
                   <div class="bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10 card-hover">
                     <div class="flex items-start space-x-5">
                       <div class="w-14 h-14 gradient-bg rounded-2xl flex items-center justify-center flex-shrink-0">
@@ -866,7 +866,7 @@
                       </div>
                     </div>
                   </div>
-          
+
                   <div class="bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10 card-hover">
                     <div class="flex items-start space-x-5">
                       <div class="w-14 h-14 gradient-bg rounded-2xl flex items-center justify-center flex-shrink-0">
@@ -900,7 +900,7 @@
           <div v-if="showForm" @click="showForm = false" 
                class="fixed inset-0 bg-midnight/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
             <div @click.stop class="bg-white rounded-3xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto modal-animate">
-          
+
               <!-- Header -->
               <div class="gradient-bg p-8 rounded-t-3xl">
                 <div class="flex items-start justify-between">
@@ -914,7 +914,7 @@
                   </button>
                 </div>
               </div>
-          
+
               <!-- Form Content -->
               <div class="p-8">
                 <!-- Success State -->
@@ -925,7 +925,7 @@
                   <h4 class="text-3xl font-display font-bold text-midnight mb-2">Thank You!</h4>
                   <p class="text-slate">We'll be in touch shortly.</p>
                 </div>
-          
+
                 <!-- Form -->
                 <form v-else @submit.prevent="handleSubmit" class="space-y-5">
                   <div>
@@ -933,7 +933,7 @@
                     <input v-model="formData.name" type="text" required 
                            class="form-input" placeholder="Enter your name">
                   </div>
-          
+
                   <div class="grid grid-cols-2 gap-4">
                     <div>
                       <label class="block text-sm font-semibold text-midnight mb-2">Email *</label>
@@ -946,7 +946,7 @@
                              class="form-input" placeholder="10-digit number">
                     </div>
                   </div>
-          
+
                   <div class="grid grid-cols-2 gap-4">
                     <div>
                       <label class="block text-sm font-semibold text-midnight mb-2">Course *</label>
@@ -969,31 +969,31 @@
                       </select>
                     </div>
                   </div>
-          
+
                   <div>
                     <label class="block text-sm font-semibold text-midnight mb-2">Address</label>
                     <input v-model="formData.collegeName" type="text" 
                            class="form-input" placeholder="Your complete address">
                   </div>
-          
+
                   <div>
                     <label class="block text-sm font-semibold text-midnight mb-2">Current Skills</label>
                     <input v-model="formData.goals" type="text" 
                            class="form-input" placeholder="Skills you already have">
                   </div>
-          
+
                   <div>
                     <label class="block text-sm font-semibold text-midnight mb-2">Skills to Learn</label>
                     <input v-model="formData.skills" type="text" 
                            class="form-input" placeholder="Skills you want to develop">
                   </div>
-          
+
                   <div>
                     <label class="block text-sm font-semibold text-midnight mb-2">Future Goals</label>
                     <input v-model="formData.skillswant" type="text" 
                            class="form-input" placeholder="Your career aspirations">
                   </div>
-          
+
                   <button type="submit" class="w-full btn-primary text-center mt-6">
                     Submit Application
                   </button>
