@@ -11,162 +11,46 @@
   
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f8fafc;
-    }
-    
-    .gradient-bg {
-      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-    }
-    
-    .card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      transition: all 0.3s;
-    }
-    
-    .card:hover {
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    
-    .btn-primary {
-      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-      color: white;
-      padding: 10px 24px;
-      border-radius: 8px;
-      font-weight: 600;
-      transition: all 0.3s;
-      border: none;
-      cursor: pointer;
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-    }
-
-    .btn-secondary {
-      background: white;
-      color: #6366f1;
-      padding: 10px 24px;
-      border-radius: 8px;
-      font-weight: 600;
-      border: 2px solid #6366f1;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    
-    .btn-secondary:hover {
-      background: #6366f1;
-      color: white;
-    }
-    
-    .btn-danger {
-      background: #ef4444;
-      color: white;
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-weight: 500;
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    
-    .btn-danger:hover {
-      background: #dc2626;
-    }
-    
-    .form-input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 14px;
-      transition: all 0.3s;
-    }
-    
-    .form-input:focus {
-      outline: none;
-      border-color: #6366f1;
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-    }
-    
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 50;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    
-    .modal.active {
-      display: flex;
-    }
-    
-    .modal-content {
-      background: white;
-      border-radius: 16px;
-      max-width: 600px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    
-    .tab {
-      padding: 12px 24px;
-      border-bottom: 3px solid transparent;
-      cursor: pointer;
-      font-weight: 600;
-      color: #64748b;
-      transition: all 0.3s;
-    }
-    
-    .tab.active {
-      color: #6366f1;
-      border-bottom-color: #6366f1;
-    }
-    
-    .badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; }
+    .gradient-bg { background: linear-gradient(135deg, #1a6b3a 0%, #2d8a53 100%); }
+    .card { background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: all 0.3s; }
+    .card:hover { box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .btn-primary { background: linear-gradient(135deg, #1a6b3a 0%, #2d8a53 100%); color: white; padding: 10px 24px; border-radius: 8px; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(26,107,58,0.4); }
+    .btn-secondary { background: white; color: #1a6b3a; padding: 10px 24px; border-radius: 8px; font-weight: 600; border: 2px solid #1a6b3a; cursor: pointer; transition: all 0.3s; }
+    .btn-secondary:hover { background: #1a6b3a; color: white; }
+    .btn-danger { background: #ef4444; color: white; padding: 8px 16px; border-radius: 6px; font-weight: 500; border: none; cursor: pointer; transition: all 0.3s; }
+    .btn-danger:hover { background: #dc2626; }
+    .btn-sm { padding: 6px 14px; font-size: 13px; border-radius: 6px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; }
+    .btn-green { background: #1a6b3a; color: white; }
+    .btn-green:hover { background: #145c30; }
+    .btn-amber { background: #d97706; color: white; }
+    .btn-amber:hover { background: #b45309; }
+    .btn-red { background: #ef4444; color: white; }
+    .btn-red:hover { background: #dc2626; }
+    .form-input { width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; transition: all 0.3s; }
+    .form-input:focus { outline: none; border-color: #1a6b3a; box-shadow: 0 0 0 3px rgba(26,107,58,0.1); }
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; align-items: center; justify-content: center; padding: 20px; }
+    .modal.active { display: flex; }
+    .modal-content { background: white; border-radius: 16px; max-width: 640px; width: 100%; max-height: 90vh; overflow-y: auto; }
+    .tab { padding: 12px 20px; border-bottom: 3px solid transparent; cursor: pointer; font-weight: 600; color: #64748b; transition: all 0.3s; white-space: nowrap; }
+    .tab.active { color: #1a6b3a; border-bottom-color: #1a6b3a; }
+    .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
     .badge-high { background: #fee2e2; color: #dc2626; }
     .badge-medium { background: #fef3c7; color: #d97706; }
     .badge-low { background: #dbeafe; color: #2563eb; }
     .badge-active { background: #d1fae5; color: #059669; }
     .badge-inactive { background: #f1f5f9; color: #64748b; }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    
-    th {
-      background: #f8fafc;
-      padding: 12px;
-      text-align: left;
-      font-weight: 600;
-      color: #475569;
-      border-bottom: 2px solid #e2e8f0;
-    }
-    
-    td {
-      padding: 12px;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    
-    tr:hover {
-      background: #f8fafc;
-    }
+    .badge-course { background: #dcfce7; color: #166534; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #f8fafc; padding: 12px; text-align: left; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0; }
+    td { padding: 12px; border-bottom: 1px solid #e2e8f0; }
+    tr:hover { background: #f8fafc; }
+    .skill-course-card { background: white; border-radius: 12px; border: 2px solid #e2e8f0; padding: 20px; transition: all 0.3s; }
+    .skill-course-card:hover { border-color: #1a6b3a; box-shadow: 0 4px 20px rgba(26,107,58,0.1); }
+    .skill-course-card.selected { border-color: #1a6b3a; background: #f0faf4; }
+    .sub-tab { padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 14px; color: #64748b; transition: all 0.2s; }
+    .sub-tab.active { background: #1a6b3a; color: white; }
   </style>
 </head>
 
@@ -182,25 +66,17 @@
           <h1 class="text-3xl font-bold text-gray-900">Admin Login</h1>
           <p class="text-gray-500 mt-2">Gyana Education Hub</p>
         </div>
-        
-        <div v-if="loginError" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-          {{ loginError }}
-        </div>
-        
+        <div v-if="loginError" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">{{ loginError }}</div>
         <form @submit.prevent="login">
           <div class="mb-4">
             <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
             <input v-model="loginForm.username" type="text" required class="form-input" placeholder="Enter username">
           </div>
-          
           <div class="mb-6">
             <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
             <input v-model="loginForm.password" type="password" required class="form-input" placeholder="Enter password">
           </div>
-          
-          <button type="submit" class="btn-primary w-full">
-            {{ isLoggingIn ? 'Logging in...' : 'Login' }}
-          </button>
+          <button type="submit" class="btn-primary w-full">{{ isLoggingIn ? 'Logging in...' : 'Login' }}</button>
         </form>
       </div>
     </div>
@@ -219,10 +95,8 @@
               <p class="text-sm text-gray-500">Welcome, {{ username }}</p>
             </div>
           </div>
-          
           <button @click="logout" class="btn-secondary">
-            <i data-lucide="log-out" class="w-4 h-4 inline mr-2"></i>
-            Logout
+            <i data-lucide="log-out" class="w-4 h-4 inline mr-2"></i>Logout
           </button>
         </div>
       </header>
@@ -230,64 +104,47 @@
       <!-- Main Content -->
       <div class="max-w-7xl mx-auto px-6 py-8">
         <!-- Stats -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div class="card p-6">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm font-medium text-gray-500">Total Notifications</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1">{{ stats.notifications }}</p>
-              </div>
-              <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                <i data-lucide="bell" class="text-blue-600 w-6 h-6"></i>
-              </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+          <div class="card p-5">
+            <p class="text-xs font-medium text-gray-500 mb-1">Notifications</p>
+            <p class="text-2xl font-bold text-gray-900">{{ stats.notifications }}</p>
+            <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mt-2">
+              <i data-lucide="bell" class="text-blue-600 w-4 h-4"></i>
             </div>
           </div>
-          
-          <div class="card p-6">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm font-medium text-gray-500">Total Notes</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1">{{ stats.notes }}</p>
-              </div>
-              <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                <i data-lucide="file-text" class="text-green-600 w-6 h-6"></i>
-              </div>
+          <div class="card p-5">
+            <p class="text-xs font-medium text-gray-500 mb-1">Notes</p>
+            <p class="text-2xl font-bold text-gray-900">{{ stats.notes }}</p>
+            <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mt-2">
+              <i data-lucide="file-text" class="text-green-600 w-4 h-4"></i>
             </div>
           </div>
-          
-          <div class="card p-6">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm font-medium text-gray-500">Total Videos</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1">{{ stats.videos }}</p>
-              </div>
-              <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                <i data-lucide="play-circle" class="text-purple-600 w-6 h-6"></i>
-              </div>
+          <div class="card p-5">
+            <p class="text-xs font-medium text-gray-500 mb-1">Videos</p>
+            <p class="text-2xl font-bold text-gray-900">{{ stats.videos }}</p>
+            <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mt-2">
+              <i data-lucide="play-circle" class="text-purple-600 w-4 h-4"></i>
             </div>
           </div>
-          
-          <div class="card p-6">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm font-medium text-gray-500">Total Topics</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1">{{ allTopics.length }}</p>
-              </div>
-              <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
-                <i data-lucide="bookmark" class="text-orange-600 w-6 h-6"></i>
-              </div>
+          <div class="card p-5">
+            <p class="text-xs font-medium text-gray-500 mb-1">Topics</p>
+            <p class="text-2xl font-bold text-gray-900">{{ allTopics.length }}</p>
+            <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center mt-2">
+              <i data-lucide="bookmark" class="text-orange-600 w-4 h-4"></i>
             </div>
           </div>
-
-          <div class="card p-6">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm font-medium text-gray-500">Enrollments</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1">{{ submissions.length }}</p>
-              </div>
-              <div class="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center">
-                <i data-lucide="users" class="text-pink-600 w-6 h-6"></i>
-              </div>
+          <div class="card p-5">
+            <p class="text-xs font-medium text-gray-500 mb-1">Enrollments</p>
+            <p class="text-2xl font-bold text-gray-900">{{ submissions.length }}</p>
+            <div class="w-8 h-8 bg-pink-100 rounded-lg flex items-center justify-center mt-2">
+              <i data-lucide="users" class="text-pink-600 w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="card p-5">
+            <p class="text-xs font-medium text-gray-500 mb-1">Skill Courses</p>
+            <p class="text-2xl font-bold text-gray-900">{{ skillCourses.length }}</p>
+            <div class="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center mt-2">
+              <i data-lucide="zap" class="text-teal-600 w-4 h-4"></i>
             </div>
           </div>
         </div>
@@ -296,77 +153,47 @@
         <div class="card mb-6">
           <div class="flex border-b overflow-x-auto">
             <div class="tab" :class="{ active: activeTab === 'notifications' }" @click="activeTab = 'notifications'">
-              <i data-lucide="bell" class="w-4 h-4 inline mr-2"></i>
-              Notifications
+              <i data-lucide="bell" class="w-4 h-4 inline mr-1"></i> Notifications
             </div>
             <div class="tab" :class="{ active: activeTab === 'notes' }" @click="activeTab = 'notes'">
-              <i data-lucide="file-text" class="w-4 h-4 inline mr-2"></i>
-              Notes
+              <i data-lucide="file-text" class="w-4 h-4 inline mr-1"></i> Notes
             </div>
             <div class="tab" :class="{ active: activeTab === 'videos' }" @click="activeTab = 'videos'">
-              <i data-lucide="play-circle" class="w-4 h-4 inline mr-2"></i>
-              Videos
+              <i data-lucide="play-circle" class="w-4 h-4 inline mr-1"></i> Videos
             </div>
             <div class="tab" :class="{ active: activeTab === 'submissions' }" @click="activeTab = 'submissions'">
-              <i data-lucide="users" class="w-4 h-4 inline mr-2"></i>
-              Enrollments
+              <i data-lucide="users" class="w-4 h-4 inline mr-1"></i> Enrollments
+            </div>
+            <div class="tab" :class="{ active: activeTab === 'skills' }" @click="activeTab = 'skills'; loadSkillCourses()">
+              <i data-lucide="zap" class="w-4 h-4 inline mr-1"></i> Skill Enhancement
             </div>
           </div>
-          
+
           <div class="p-6">
-            <!-- Notifications Tab -->
+
+            <!-- ── NOTIFICATIONS TAB ── -->
             <div v-if="activeTab === 'notifications'">
               <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-bold text-gray-900">Manage Notifications</h2>
                 <button @click="openNotificationModal()" class="btn-primary">
-                  <i data-lucide="plus" class="w-4 h-4 inline mr-2"></i>
-                  Add Notification
+                  <i data-lucide="plus" class="w-4 h-4 inline mr-2"></i>Add Notification
                 </button>
               </div>
-              
               <div class="overflow-x-auto">
                 <table>
-                  <thead>
-                    <tr>
-                      <th>Title</th>
-                      <th>Message</th>
-                      <th>Link</th>
-                      <th>Exam Name</th>
-                      <th>Exam Date</th>
-                      <th>Priority</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
+                  <thead><tr><th>Title</th><th>Message</th><th>Link</th><th>Exam Name</th><th>Exam Date</th><th>Priority</th><th>Status</th><th>Actions</th></tr></thead>
                   <tbody>
-                    <tr v-for="notification in notifications" :key="notification.id">
-                      <td class="font-medium">{{ notification.title }}</td>
-                      <td class="max-w-xs truncate">{{ notification.message }}</td>
+                    <tr v-for="n in notifications" :key="n.id">
+                      <td class="font-medium">{{ n.title }}</td>
+                      <td class="max-w-xs truncate">{{ n.message }}</td>
+                      <td><a v-if="n.link" :href="n.link" target="_blank" class="text-blue-600"><i data-lucide="external-link" class="w-4 h-4"></i></a><span v-else class="text-gray-400">N/A</span></td>
+                      <td>{{ n.exam_name || 'N/A' }}</td>
+                      <td>{{ formatDate(n.exam_date) }}</td>
+                      <td><span class="badge" :class="'badge-' + n.priority">{{ n.priority }}</span></td>
+                      <td><span class="badge" :class="n.is_active ? 'badge-active' : 'badge-inactive'">{{ n.is_active ? 'Active' : 'Inactive' }}</span></td>
                       <td>
-                        <a v-if="notification.link" :href="notification.link" target="_blank" class="text-blue-600 hover:text-blue-800">
-                          <i data-lucide="external-link" class="w-4 h-4"></i>
-                        </a>
-                        <span v-else class="text-gray-400">N/A</span>
-                      </td>
-                      <td>{{ notification.exam_name || 'N/A' }}</td>
-                      <td>{{ formatDate(notification.exam_date) }}</td>
-                      <td>
-                        <span class="badge" :class="'badge-' + notification.priority">
-                          {{ notification.priority }}
-                        </span>
-                      </td>
-                      <td>
-                        <span class="badge" :class="notification.is_active ? 'badge-active' : 'badge-inactive'">
-                          {{ notification.is_active ? 'Active' : 'Inactive' }}
-                        </span>
-                      </td>
-                      <td>
-                        <button @click="openNotificationModal(notification)" class="text-blue-600 hover:text-blue-800 mr-3">
-                          <i data-lucide="edit" class="w-4 h-4"></i>
-                        </button>
-                        <button @click="deleteNotification(notification.id)" class="text-red-600 hover:text-red-800">
-                          <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
+                        <button @click="openNotificationModal(n)" class="text-blue-600 hover:text-blue-800 mr-3"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                        <button @click="deleteNotification(n.id)" class="text-red-600 hover:text-red-800"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                       </td>
                     </tr>
                   </tbody>
@@ -374,56 +201,27 @@
               </div>
             </div>
 
-            <!-- Notes Tab -->
+            <!-- ── NOTES TAB ── -->
             <div v-if="activeTab === 'notes'">
               <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-bold text-gray-900">Manage Notes</h2>
-                <button @click="openNoteModal()" class="btn-primary">
-                  <i data-lucide="plus" class="w-4 h-4 inline mr-2"></i>
-                  Add Note
-                </button>
+                <button @click="openNoteModal()" class="btn-primary"><i data-lucide="plus" class="w-4 h-4 inline mr-2"></i>Add Note</button>
               </div>
-              
               <div class="overflow-x-auto">
                 <table>
-                  <thead>
-                    <tr>
-                      <th>Title</th>
-                      <th>Course</th>
-                      <th>Semester</th>
-                      <th>Topic</th>
-                      <th>PDF Link</th>
-                      <th>Downloads</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
+                  <thead><tr><th>Title</th><th>Course</th><th>Semester</th><th>Topic</th><th>PDF</th><th>Downloads</th><th>Status</th><th>Actions</th></tr></thead>
                   <tbody>
                     <tr v-for="note in notes" :key="note.id">
                       <td class="font-medium">{{ note.title }}</td>
                       <td>{{ note.course }}</td>
                       <td>Sem {{ note.semester }}</td>
                       <td>{{ note.topic }}</td>
-                      <td>
-                        <a v-if="note.pdf_url" :href="note.pdf_url" target="_blank" class="text-blue-600 hover:text-blue-800 flex items-center gap-1">
-                          <i data-lucide="external-link" class="w-4 h-4"></i>
-                          <span class="text-xs">View PDF</span>
-                        </a>
-                        <span v-else class="text-gray-400">N/A</span>
-                      </td>
+                      <td><a v-if="note.pdf_url" :href="note.pdf_url" target="_blank" class="text-blue-600 flex items-center gap-1"><i data-lucide="external-link" class="w-4 h-4"></i><span class="text-xs">View</span></a><span v-else class="text-gray-400">N/A</span></td>
                       <td>{{ note.downloads }}</td>
+                      <td><span class="badge" :class="note.is_active ? 'badge-active' : 'badge-inactive'">{{ note.is_active ? 'Active' : 'Inactive' }}</span></td>
                       <td>
-                        <span class="badge" :class="note.is_active ? 'badge-active' : 'badge-inactive'">
-                          {{ note.is_active ? 'Active' : 'Inactive' }}
-                        </span>
-                      </td>
-                      <td>
-                        <button @click="openNoteModal(note)" class="text-blue-600 hover:text-blue-800 mr-3">
-                          <i data-lucide="edit" class="w-4 h-4"></i>
-                        </button>
-                        <button @click="deleteNote(note.id)" class="text-red-600 hover:text-red-800">
-                          <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
+                        <button @click="openNoteModal(note)" class="text-blue-600 hover:text-blue-800 mr-3"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                        <button @click="deleteNote(note.id)" class="text-red-600 hover:text-red-800"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                       </td>
                     </tr>
                   </tbody>
@@ -431,29 +229,15 @@
               </div>
             </div>
 
-            <!-- Videos Tab -->
+            <!-- ── VIDEOS TAB ── -->
             <div v-if="activeTab === 'videos'">
               <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-bold text-gray-900">Manage Videos</h2>
-                <button @click="openVideoModal()" class="btn-primary">
-                  <i data-lucide="plus" class="w-4 h-4 inline mr-2"></i>
-                  Add Video
-                </button>
+                <button @click="openVideoModal()" class="btn-primary"><i data-lucide="plus" class="w-4 h-4 inline mr-2"></i>Add Video</button>
               </div>
-              
               <div class="overflow-x-auto">
                 <table>
-                  <thead>
-                    <tr>
-                      <th>Title</th>
-                      <th>Course</th>
-                      <th>Semester</th>
-                      <th>Topic</th>
-                      <th>Views</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
+                  <thead><tr><th>Title</th><th>Course</th><th>Semester</th><th>Topic</th><th>Views</th><th>Status</th><th>Actions</th></tr></thead>
                   <tbody>
                     <tr v-for="video in videos" :key="video.id">
                       <td class="font-medium">{{ video.title }}</td>
@@ -461,25 +245,18 @@
                       <td>Sem {{ video.semester }}</td>
                       <td>{{ video.topic }}</td>
                       <td>{{ video.views }}</td>
+                      <td><span class="badge" :class="video.is_active ? 'badge-active' : 'badge-inactive'">{{ video.is_active ? 'Active' : 'Inactive' }}</span></td>
                       <td>
-                        <span class="badge" :class="video.is_active ? 'badge-active' : 'badge-inactive'">
-                          {{ video.is_active ? 'Active' : 'Inactive' }}
-                        </span>
-                      </td>
-                      <td>
-                        <button @click="openVideoModal(video)" class="text-blue-600 hover:text-blue-800 mr-3">
-                          <i data-lucide="edit" class="w-4 h-4"></i>
-                        </button>
-                        <button @click="deleteVideo(video.id)" class="text-red-600 hover:text-red-800">
-                          <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
+                        <button @click="openVideoModal(video)" class="text-blue-600 hover:text-blue-800 mr-3"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                        <button @click="deleteVideo(video.id)" class="text-red-600 hover:text-red-800"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
-            <!-- Submissions Tab -->
+
+            <!-- ── SUBMISSIONS TAB ── -->
             <div v-if="activeTab === 'submissions'">
               <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-bold text-gray-900">Enrollment Submissions</h2>
@@ -488,30 +265,13 @@
                   <span class="text-sm text-gray-500">{{ filteredSubmissions.length }} records</span>
                 </div>
               </div>
-
               <div v-if="submissions.length === 0" class="text-center py-16 text-gray-400">
                 <i data-lucide="inbox" class="w-12 h-12 mx-auto mb-3 opacity-40"></i>
                 <p class="text-lg font-medium">No submissions yet</p>
-                <p class="text-sm">Enrollment form submissions will appear here.</p>
               </div>
-
               <div v-else class="overflow-x-auto">
                 <table>
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Mobile</th>
-                      <th>Course</th>
-                      <th>Year</th>
-                      <th>Residence Address</th>
-                      <th>Current Skills</th>
-                      <th>Skills Wanted</th>
-                      <th>Goals</th>
-                      <th>Submitted On</th>
-                    </tr>
-                  </thead>
+                  <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Mobile</th><th>Course</th><th>Year</th><th>Residence Address</th><th>Current Skills</th><th>Skills Wanted</th><th>Goals</th><th>Submitted On</th></tr></thead>
                   <tbody>
                     <tr v-for="(s, i) in filteredSubmissions" :key="s.id">
                       <td class="text-gray-400 text-sm">{{ i + 1 }}</td>
@@ -530,67 +290,159 @@
                 </table>
               </div>
             </div>
+
+            <!-- ── SKILL ENHANCEMENT TAB ── -->
+            <div v-if="activeTab === 'skills'">
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-900">Skill Enhancement Courses</h2>
+                <button @click="openSkillCourseModal()" class="btn-primary">
+                  <i data-lucide="plus" class="w-4 h-4 inline mr-2"></i>Add Course
+                </button>
+              </div>
+
+              <!-- Two-panel layout: course list left, materials right -->
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- Left: Course List -->
+                <div class="lg:col-span-1">
+                  <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Courses ({{ skillCourses.length }})</h3>
+                  <div v-if="skillCourses.length === 0" class="text-center py-10 text-gray-400 border-2 border-dashed border-gray-200 rounded-xl">
+                    <i data-lucide="zap" class="w-10 h-10 mx-auto mb-2 opacity-30"></i>
+                    <p class="text-sm">No skill courses yet</p>
+                  </div>
+                  <div v-for="sc in skillCourses" :key="sc.id"
+                       class="skill-course-card mb-3 cursor-pointer"
+                       :class="{ selected: selectedSkillCourse && selectedSkillCourse.id === sc.id }"
+                       @click="selectSkillCourse(sc)">
+                    <div class="flex items-start justify-between">
+                      <div class="flex-1 min-w-0">
+                        <p class="font-bold text-gray-900 text-sm">{{ sc.title }}</p>
+                        <p class="text-xs text-gray-500 mt-0.5 truncate">{{ sc.category || 'General' }}</p>
+                        <div class="flex items-center gap-2 mt-2">
+                          <span class="badge badge-course text-xs">{{ sc.stream || 'All' }}</span>
+                          <span class="text-xs text-gray-400">Sem {{ sc.semester || 'All' }}</span>
+                        </div>
+                      </div>
+                      <div class="flex gap-1 ml-2 flex-shrink-0">
+                        <button @click.stop="openSkillCourseModal(sc)" class="btn-sm btn-amber p-1.5" title="Edit">
+                          <i data-lucide="edit" class="w-3 h-3"></i>
+                        </button>
+                        <button @click.stop="deleteSkillCourse(sc.id)" class="btn-sm btn-red p-1.5" title="Delete">
+                          <i data-lucide="trash-2" class="w-3 h-3"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <p v-if="sc.description" class="text-xs text-gray-500 mt-2 line-clamp-2">{{ sc.description }}</p>
+                  </div>
+                </div>
+
+                <!-- Right: Materials for selected course -->
+                <div class="lg:col-span-2">
+                  <div v-if="!selectedSkillCourse" class="flex flex-col items-center justify-center h-64 text-gray-400 border-2 border-dashed border-gray-200 rounded-xl">
+                    <i data-lucide="mouse-pointer-click" class="w-10 h-10 mb-3 opacity-30"></i>
+                    <p class="font-medium">Select a course to manage its materials</p>
+                  </div>
+
+                  <div v-else>
+                    <div class="flex items-center justify-between mb-4">
+                      <div>
+                        <h3 class="font-bold text-gray-900">{{ selectedSkillCourse.title }}</h3>
+                        <p class="text-sm text-gray-500">Materials</p>
+                      </div>
+                      <div class="flex gap-2">
+                        <button @click="openSkillMaterialModal('note')" class="btn-sm btn-green">
+                          <i data-lucide="file-text" class="w-3 h-3 inline mr-1"></i>Add PDF
+                        </button>
+                        <button @click="openSkillMaterialModal('video')" class="btn-sm btn-amber">
+                          <i data-lucide="play-circle" class="w-3 h-3 inline mr-1"></i>Add Video
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Sub-tabs: Notes / Videos -->
+                    <div class="flex gap-2 mb-4">
+                      <div class="sub-tab" :class="{ active: skillMaterialTab === 'notes' }" @click="skillMaterialTab = 'notes'">
+                        <i data-lucide="file-text" class="w-3 h-3 inline mr-1"></i>PDFs/Notes ({{ skillNotes.length }})
+                      </div>
+                      <div class="sub-tab" :class="{ active: skillMaterialTab === 'videos' }" @click="skillMaterialTab = 'videos'">
+                        <i data-lucide="play-circle" class="w-3 h-3 inline mr-1"></i>Videos ({{ skillVideos.length }})
+                      </div>
+                    </div>
+
+                    <!-- Notes list -->
+                    <div v-if="skillMaterialTab === 'notes'">
+                      <div v-if="skillNotes.length === 0" class="text-center py-8 text-gray-400 bg-gray-50 rounded-xl">
+                        <p class="text-sm">No PDFs added yet</p>
+                      </div>
+                      <div v-for="sn in skillNotes" :key="sn.id" class="flex items-center justify-between p-3 bg-gray-50 rounded-lg mb-2">
+                        <div class="flex-1 min-w-0 mr-3">
+                          <p class="font-medium text-sm text-gray-900 truncate">{{ sn.title }}</p>
+                          <p class="text-xs text-gray-500">{{ sn.topic }} · {{ sn.file_size_kb ? sn.file_size_kb + ' KB' : '' }}</p>
+                        </div>
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                          <a v-if="sn.pdf_url" :href="sn.pdf_url" target="_blank" class="text-blue-600 hover:text-blue-800">
+                            <i data-lucide="external-link" class="w-4 h-4"></i>
+                          </a>
+                          <button @click="openSkillMaterialModal('note', sn)" class="btn-sm btn-amber p-1.5"><i data-lucide="edit" class="w-3 h-3"></i></button>
+                          <button @click="deleteSkillMaterial('note', sn.id)" class="btn-sm btn-red p-1.5"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Videos list -->
+                    <div v-if="skillMaterialTab === 'videos'">
+                      <div v-if="skillVideos.length === 0" class="text-center py-8 text-gray-400 bg-gray-50 rounded-xl">
+                        <p class="text-sm">No videos added yet</p>
+                      </div>
+                      <div v-for="sv in skillVideos" :key="sv.id" class="flex items-center justify-between p-3 bg-gray-50 rounded-lg mb-2">
+                        <div class="flex-1 min-w-0 mr-3">
+                          <p class="font-medium text-sm text-gray-900 truncate">{{ sv.title }}</p>
+                          <p class="text-xs text-gray-500">{{ sv.topic }} · {{ sv.duration_minutes ? sv.duration_minutes + ' min' : '' }}</p>
+                        </div>
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                          <a v-if="sv.youtube_url" :href="sv.youtube_url" target="_blank" class="text-red-600 hover:text-red-800">
+                            <i data-lucide="youtube" class="w-4 h-4"></i>
+                          </a>
+                          <button @click="openSkillMaterialModal('video', sv)" class="btn-sm btn-amber p-1.5"><i data-lucide="edit" class="w-3 h-3"></i></button>
+                          <button @click="deleteSkillMaterial('video', sv.id)" class="btn-sm btn-red p-1.5"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- MODALS -->
+    <!-- ══════════════════════════════════════════ -->
+
+    <!-- Notification Modal -->
     <div class="modal" :class="{ active: showNotificationModal }" @click="closeNotificationModal">
       <div class="modal-content" @click.stop>
         <div class="gradient-bg p-6 flex justify-between items-center">
-          <h3 class="text-2xl font-bold text-white">
-            {{ editingNotification ? 'Edit Notification' : 'Add Notification' }}
-          </h3>
-          <button @click="closeNotificationModal" class="text-white hover:bg-white/20 p-2 rounded-lg">
-            <i data-lucide="x" class="w-6 h-6"></i>
-          </button>
+          <h3 class="text-2xl font-bold text-white">{{ editingNotification ? 'Edit Notification' : 'Add Notification' }}</h3>
+          <button @click="closeNotificationModal" class="text-white hover:bg-white/20 p-2 rounded-lg"><i data-lucide="x" class="w-6 h-6"></i></button>
         </div>
-        
         <form @submit.prevent="saveNotification" class="p-6 space-y-4">
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Title *</label>
-            <input v-model="notificationForm.title" type="text" required class="form-input" placeholder="Notification title">
-          </div>
-          
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Message *</label>
-            <textarea v-model="notificationForm.message" required class="form-input" rows="4" placeholder="Notification message"></textarea>
-          </div>
-          
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Link (optional)</label>
-            <input v-model="notificationForm.link" type="url" class="form-input" placeholder="https://example.com">
-            <p class="text-xs text-gray-500 mt-1">When users click on this notification, they'll be redirected to this URL</p>
-          </div>
-          
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">Title *</label><input v-model="notificationForm.title" type="text" required class="form-input" placeholder="Notification title"></div>
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">Message *</label><textarea v-model="notificationForm.message" required class="form-input" rows="4" placeholder="Notification message"></textarea></div>
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">Link (optional)</label><input v-model="notificationForm.link" type="url" class="form-input" placeholder="https://example.com"></div>
           <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Exam Name</label>
-              <input v-model="notificationForm.exam_name" type="text" class="form-input" placeholder="e.g., Mid-Term Exam">
-            </div>
-            
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Exam Date</label>
-              <input v-model="notificationForm.exam_date" type="date" class="form-input">
-            </div>
+            <div><label class="block text-sm font-semibold text-gray-700 mb-2">Exam Name</label><input v-model="notificationForm.exam_name" type="text" class="form-input" placeholder="e.g., Mid-Term Exam"></div>
+            <div><label class="block text-sm font-semibold text-gray-700 mb-2">Exam Date</label><input v-model="notificationForm.exam_date" type="date" class="form-input"></div>
           </div>
-          
           <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Priority</label>
-              <select v-model="notificationForm.priority" class="form-input">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-              </select>
-            </div>
-            
-            <div v-if="editingNotification">
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
-              <select v-model="notificationForm.is_active" class="form-input">
-                <option :value="true">Active</option>
-                <option :value="false">Inactive</option>
-              </select>
-            </div>
+            <div><label class="block text-sm font-semibold text-gray-700 mb-2">Priority</label>
+              <select v-model="notificationForm.priority" class="form-input"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select></div>
+            <div v-if="editingNotification"><label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+              <select v-model="notificationForm.is_active" class="form-input"><option :value="true">Active</option><option :value="false">Inactive</option></select></div>
           </div>
-          
           <div class="flex space-x-3 pt-4">
             <button type="submit" class="btn-primary flex-1">Save</button>
             <button type="button" @click="closeNotificationModal" class="btn-secondary flex-1">Cancel</button>
@@ -603,94 +455,38 @@
     <div class="modal" :class="{ active: showNoteModal }" @click="closeNoteModal">
       <div class="modal-content" @click.stop>
         <div class="gradient-bg p-6 flex justify-between items-center">
-          <h3 class="text-2xl font-bold text-white">
-            {{ editingNote ? 'Edit Note' : 'Add Note' }}
-          </h3>
-          <button @click="closeNoteModal" class="text-white hover:bg-white/20 p-2 rounded-lg">
-            <i data-lucide="x" class="w-6 h-6"></i>
-          </button>
+          <h3 class="text-2xl font-bold text-white">{{ editingNote ? 'Edit Note' : 'Add Note' }}</h3>
+          <button @click="closeNoteModal" class="text-white hover:bg-white/20 p-2 rounded-lg"><i data-lucide="x" class="w-6 h-6"></i></button>
         </div>
-        
         <form @submit.prevent="saveNote" class="p-6 space-y-4">
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Title *</label>
-            <input v-model="noteForm.title" type="text" required class="form-input" placeholder="Note title">
-          </div>
-          
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
-            <textarea v-model="noteForm.description" class="form-input" rows="3" placeholder="Brief description"></textarea>
-          </div>
-          
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">Title *</label><input v-model="noteForm.title" type="text" required class="form-input" placeholder="Note title"></div>
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">Description</label><textarea v-model="noteForm.description" class="form-input" rows="3" placeholder="Brief description"></textarea></div>
           <div>
             <label class="block text-sm font-semibold text-gray-700 mb-2">PDF File *</label>
-            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-500 transition-colors">
-              <input 
-              type="file" 
-              @change="handleFileChange" 
-              accept=".pdf"
-              :required="!editingNote"
-              class="hidden" 
-              id="pdfFile"
-              >
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-500 transition-colors">
+              <input type="file" @change="handleFileChange" accept=".pdf" :required="!editingNote" class="hidden" id="pdfFile">
               <label for="pdfFile" class="cursor-pointer">
                 <i data-lucide="upload-cloud" class="w-12 h-12 mx-auto text-gray-400 mb-2"></i>
-                <p class="text-sm text-gray-600">
-                  {{ selectedFile ? selectedFile.name : 'Click to upload PDF' }}
-                </p>
-                <p class="text-xs text-gray-400 mt-1">
-                  {{ selectedFile ? `${(selectedFile.size / 1024).toFixed(2)} KB` : 'Max 10MB' }}
-                </p>
+                <p class="text-sm text-gray-600">{{ selectedFile ? selectedFile.name : 'Click to upload PDF' }}</p>
+                <p class="text-xs text-gray-400 mt-1">{{ selectedFile ? `${(selectedFile.size / 1024).toFixed(2)} KB` : 'Max 10MB' }}</p>
               </label>
             </div>
             <div v-if="uploadProgress > 0 && uploadProgress < 100" class="mt-2">
-              <div class="w-full bg-gray-200 rounded-full h-2">
-                <div class="bg-indigo-600 h-2 rounded-full transition-all" :style="{width: uploadProgress + '%'}"></div>
-              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-green-600 h-2 rounded-full transition-all" :style="{width: uploadProgress + '%'}"></div></div>
               <p class="text-xs text-gray-600 mt-1 text-center">Uploading... {{ uploadProgress }}%</p>
             </div>
             <input v-model="noteForm.pdf_url" type="hidden">
           </div>
-          
           <div class="grid grid-cols-3 gap-4">
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Course *</label>
-              <select v-model="noteForm.course" required class="form-input">
-                <option value="">Select</option>
-                <option value="B.Sc">B.Sc</option>
-                <option value="B.A">B.A</option>
-                <option value="B.Com">B.Com</option>
-                <option value="B.C.A">B.C.A</option>
-              </select>
-            </div>
-            
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Semester *</label>
-              <select v-model="noteForm.semester" required class="form-input">
-                <option value="">Select</option>
-                <option v-for="i in 8" :key="i" :value="i">Semester {{ i }}</option>
-              </select>
-            </div>
-            
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-2">File Size (KB)</label>
-              <input v-model.number="noteForm.file_size_kb" type="number" class="form-input" placeholder="1024">
-            </div>
+            <div><label class="block text-sm font-semibold text-gray-700 mb-2">Course *</label>
+              <select v-model="noteForm.course" required class="form-input"><option value="">Select</option><option value="B.Sc">B.Sc</option><option value="B.A">B.A</option><option value="B.Com">B.Com</option><option value="B.C.A">B.C.A</option></select></div>
+            <div><label class="block text-sm font-semibold text-gray-700 mb-2">Semester *</label>
+              <select v-model="noteForm.semester" required class="form-input"><option value="">Select</option><option v-for="i in 8" :key="i" :value="i">Semester {{ i }}</option></select></div>
+            <div><label class="block text-sm font-semibold text-gray-700 mb-2">File Size (KB)</label><input v-model.number="noteForm.file_size_kb" type="number" class="form-input" placeholder="1024"></div>
           </div>
-          
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Topic *</label>
-            <input v-model="noteForm.topic" type="text" required class="form-input" placeholder="e.g., Linear Algebra">
-          </div>
-          
-          <div v-if="editingNote">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
-            <select v-model="noteForm.is_active" class="form-input">
-              <option :value="true">Active</option>
-              <option :value="false">Inactive</option>
-            </select>
-          </div>
-          
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">Topic *</label><input v-model="noteForm.topic" type="text" required class="form-input" placeholder="e.g., Linear Algebra"></div>
+          <div v-if="editingNote"><label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+            <select v-model="noteForm.is_active" class="form-input"><option :value="true">Active</option><option :value="false">Inactive</option></select></div>
           <div class="flex space-x-3 pt-4">
             <button type="submit" class="btn-primary flex-1">Save</button>
             <button type="button" @click="closeNoteModal" class="btn-secondary flex-1">Cancel</button>
@@ -703,69 +499,23 @@
     <div class="modal" :class="{ active: showVideoModal }" @click="closeVideoModal">
       <div class="modal-content" @click.stop>
         <div class="gradient-bg p-6 flex justify-between items-center">
-          <h3 class="text-2xl font-bold text-white">
-            {{ editingVideo ? 'Edit Video' : 'Add Video' }}
-          </h3>
-          <button @click="closeVideoModal" class="text-white hover:bg-white/20 p-2 rounded-lg">
-            <i data-lucide="x" class="w-6 h-6"></i>
-          </button>
+          <h3 class="text-2xl font-bold text-white">{{ editingVideo ? 'Edit Video' : 'Add Video' }}</h3>
+          <button @click="closeVideoModal" class="text-white hover:bg-white/20 p-2 rounded-lg"><i data-lucide="x" class="w-6 h-6"></i></button>
         </div>
-        
         <form @submit.prevent="saveVideo" class="p-6 space-y-4">
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Title *</label>
-            <input v-model="videoForm.title" type="text" required class="form-input" placeholder="Video title">
-          </div>
-          
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
-            <textarea v-model="videoForm.description" class="form-input" rows="3" placeholder="Brief description"></textarea>
-          </div>
-          
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">YouTube URL *</label>
-            <input v-model="videoForm.youtube_url" type="url" required class="form-input" placeholder="https://youtube.com/watch?v=...">
-          </div>
-          
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">Title *</label><input v-model="videoForm.title" type="text" required class="form-input" placeholder="Video title"></div>
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">Description</label><textarea v-model="videoForm.description" class="form-input" rows="3" placeholder="Brief description"></textarea></div>
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">YouTube URL *</label><input v-model="videoForm.youtube_url" type="url" required class="form-input" placeholder="https://youtube.com/watch?v=..."></div>
           <div class="grid grid-cols-3 gap-4">
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Course *</label>
-              <select v-model="videoForm.course" required class="form-input">
-                <option value="">Select</option>
-                <option value="B.Sc">B.Sc</option>
-                <option value="B.A">B.A</option>
-                <option value="B.Com">B.Com</option>
-                <option value="B.C.A">B.C.A</option>
-              </select>
-            </div>
-            
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Semester *</label>
-              <select v-model="videoForm.semester" required class="form-input">
-                <option value="">Select</option>
-                <option v-for="i in 8" :key="i" :value="i">Semester {{ i }}</option>
-              </select>
-            </div>
-            
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Duration (min)</label>
-              <input v-model.number="videoForm.duration_minutes" type="number" class="form-input" placeholder="45">
-            </div>
+            <div><label class="block text-sm font-semibold text-gray-700 mb-2">Course *</label>
+              <select v-model="videoForm.course" required class="form-input"><option value="">Select</option><option value="B.Sc">B.Sc</option><option value="B.A">B.A</option><option value="B.Com">B.Com</option><option value="B.C.A">B.C.A</option></select></div>
+            <div><label class="block text-sm font-semibold text-gray-700 mb-2">Semester *</label>
+              <select v-model="videoForm.semester" required class="form-input"><option value="">Select</option><option v-for="i in 8" :key="i" :value="i">Semester {{ i }}</option></select></div>
+            <div><label class="block text-sm font-semibold text-gray-700 mb-2">Duration (min)</label><input v-model.number="videoForm.duration_minutes" type="number" class="form-input" placeholder="45"></div>
           </div>
-          
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Topic *</label>
-            <input v-model="videoForm.topic" type="text" required class="form-input" placeholder="e.g., Calculus Basics">
-          </div>
-          
-          <div v-if="editingVideo">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
-            <select v-model="videoForm.is_active" class="form-input">
-              <option :value="true">Active</option>
-              <option :value="false">Inactive</option>
-            </select>
-          </div>
-          
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">Topic *</label><input v-model="videoForm.topic" type="text" required class="form-input" placeholder="e.g., Calculus Basics"></div>
+          <div v-if="editingVideo"><label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+            <select v-model="videoForm.is_active" class="form-input"><option :value="true">Active</option><option :value="false">Inactive</option></select></div>
           <div class="flex space-x-3 pt-4">
             <button type="submit" class="btn-primary flex-1">Save</button>
             <button type="button" @click="closeVideoModal" class="btn-secondary flex-1">Cancel</button>
@@ -773,90 +523,145 @@
         </form>
       </div>
     </div>
-  </div>
+
+    <!-- Skill Course Modal -->
+    <div class="modal" :class="{ active: showSkillCourseModal }" @click="showSkillCourseModal = false">
+      <div class="modal-content" @click.stop>
+        <div class="gradient-bg p-6 flex justify-between items-center">
+          <h3 class="text-2xl font-bold text-white">{{ editingSkillCourse ? 'Edit Skill Course' : 'Add Skill Course' }}</h3>
+          <button @click="showSkillCourseModal = false" class="text-white hover:bg-white/20 p-2 rounded-lg"><i data-lucide="x" class="w-6 h-6"></i></button>
+        </div>
+        <form @submit.prevent="saveSkillCourse" class="p-6 space-y-4">
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">Course Title *</label><input v-model="skillCourseForm.title" type="text" required class="form-input" placeholder="e.g., Python for Beginners"></div>
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">Description</label><textarea v-model="skillCourseForm.description" class="form-input" rows="3" placeholder="What will students learn?"></textarea></div>
+          <div class="grid grid-cols-2 gap-4">
+            <div><label class="block text-sm font-semibold text-gray-700 mb-2">Category</label><input v-model="skillCourseForm.category" type="text" class="form-input" placeholder="e.g., Technology, Communication"></div>
+            <div><label class="block text-sm font-semibold text-gray-700 mb-2">Duration</label><input v-model="skillCourseForm.duration" type="text" class="form-input" placeholder="e.g., 4 Weeks"></div>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div><label class="block text-sm font-semibold text-gray-700 mb-2">Stream (for)</label>
+              <select v-model="skillCourseForm.stream" class="form-input">
+                <option value="">All Streams</option>
+                <option value="B.A">B.A</option>
+                <option value="B.Sc">B.Sc</option>
+                <option value="B.Com">B.Com</option>
+                <option value="B.C.A">B.C.A</option>
+              </select>
+            </div>
+            <div><label class="block text-sm font-semibold text-gray-700 mb-2">Semester (for)</label>
+              <select v-model="skillCourseForm.semester" class="form-input">
+                <option value="">All Semesters</option>
+                <option v-for="i in 8" :key="i" :value="String(i)">Semester {{ i }}</option>
+              </select>
+            </div>
+          </div>
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">Thumbnail URL (optional)</label><input v-model="skillCourseForm.thumbnail_url" type="url" class="form-input" placeholder="https://..."></div>
+          <div v-if="editingSkillCourse">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+            <select v-model="skillCourseForm.is_active" class="form-input"><option :value="true">Active</option><option :value="false">Inactive</option></select>
+          </div>
+          <div class="flex space-x-3 pt-4">
+            <button type="submit" class="btn-primary flex-1">Save Course</button>
+            <button type="button" @click="showSkillCourseModal = false" class="btn-secondary flex-1">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Skill Material Modal (Note or Video) -->
+    <div class="modal" :class="{ active: showSkillMaterialModal }" @click="showSkillMaterialModal = false">
+      <div class="modal-content" @click.stop>
+        <div class="gradient-bg p-6 flex justify-between items-center">
+          <h3 class="text-2xl font-bold text-white">
+            {{ editingSkillMaterial ? 'Edit' : 'Add' }} {{ skillMaterialType === 'note' ? 'PDF/Note' : 'Video' }}
+          </h3>
+          <button @click="showSkillMaterialModal = false" class="text-white hover:bg-white/20 p-2 rounded-lg"><i data-lucide="x" class="w-6 h-6"></i></button>
+        </div>
+        <form @submit.prevent="saveSkillMaterial" class="p-6 space-y-4">
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">Title *</label><input v-model="skillMaterialForm.title" type="text" required class="form-input" :placeholder="skillMaterialType === 'note' ? 'PDF title' : 'Video title'"></div>
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">Topic *</label><input v-model="skillMaterialForm.topic" type="text" required class="form-input" placeholder="e.g., Introduction, Module 1"></div>
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">Description</label><textarea v-model="skillMaterialForm.description" class="form-input" rows="2" placeholder="Brief description"></textarea></div>
+
+          <!-- PDF specific -->
+          <div v-if="skillMaterialType === 'note'">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">PDF File *</label>
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-green-500 transition-colors">
+              <input type="file" @change="handleSkillFileChange" accept=".pdf" :required="!editingSkillMaterial" class="hidden" id="skillPdfFile">
+              <label for="skillPdfFile" class="cursor-pointer">
+                <i data-lucide="upload-cloud" class="w-10 h-10 mx-auto text-gray-400 mb-2"></i>
+                <p class="text-sm text-gray-600">{{ skillSelectedFile ? skillSelectedFile.name : 'Click to upload PDF' }}</p>
+              </label>
+            </div>
+            <div v-if="skillUploadProgress > 0 && skillUploadProgress < 100" class="mt-2">
+              <div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-green-600 h-2 rounded-full" :style="{width: skillUploadProgress + '%'}"></div></div>
+            </div>
+          </div>
+
+          <!-- Video specific -->
+          <div v-if="skillMaterialType === 'video'">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">YouTube URL *</label>
+            <input v-model="skillMaterialForm.youtube_url" type="url" :required="skillMaterialType === 'video'" class="form-input" placeholder="https://youtube.com/watch?v=...">
+            <div class="mt-3"><label class="block text-sm font-semibold text-gray-700 mb-2">Duration (minutes)</label>
+              <input v-model.number="skillMaterialForm.duration_minutes" type="number" class="form-input" placeholder="30"></div>
+          </div>
+
+          <div class="flex space-x-3 pt-4">
+            <button type="submit" class="btn-primary flex-1">Save</button>
+            <button type="button" @click="showSkillMaterialModal = false" class="btn-secondary flex-1">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div><!-- end #app -->
 
   <script type="module">
     import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
 
     const API_URL = window.location.origin;
-    
-    // Supabase Configuration
     const SUPABASE_URL = 'https://lwzlxzupsewedvczcjgh.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3emx4enVwc2V3ZWR2Y3pjamdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1OTkxNTIsImV4cCI6MjA4NjE3NTE1Mn0.9bcReQ-oe4_g2Prt8QIkC5kOFg5demwowUq4Z4-Yg4I';
-    
     const { createClient } = supabase;
     const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     createApp({
       data() {
         return {
-          isAuthenticated: false,
-          username: '',
-          token: '',
-          isLoggingIn: false,
-          loginError: '',
-          loginForm: {
-            username: '',
-            password: ''
-          },
+          isAuthenticated: false, username: '', token: '', isLoggingIn: false, loginError: '',
+          loginForm: { username: '', password: '' },
           activeTab: 'notifications',
-          notifications: [],
-          notes: [],
-          videos: [],
-          submissions: [],
+          notifications: [], notes: [], videos: [], submissions: [], allTopics: [],
+          stats: { notifications: 0, notes: 0, videos: 0 },
           submissionSearch: '',
-          allTopics: [],
-          stats: {
-            notifications: 0,
-            notes: 0,
-            videos: 0
-          },
-          
-          showNotificationModal: false,
-          showNoteModal: false,
-          showVideoModal: false,
 
-          editingNotification: null,
-          editingNote: null,
-          editingVideo: null,
-          
-          notificationForm: {
-            title: '',
-            message: '',
-            link: '',
-            exam_name: '',
-            exam_date: '',
-            priority: 'medium',
-            is_active: true
-          },
-          
-          noteForm: {
-            title: '',
-            description: '',
-            pdf_url: '',
-            course: '',
-            semester: '',
-            topic: '',
-            file_size_kb: null,
-            is_active: true
-          },
-          
-          selectedFile: null,
-          uploadProgress: 0,
-          
-          videoForm: {
-            title: '',
-            description: '',
-            youtube_url: '',
-            course: '',
-            semester: '',
-            topic: '',
-            duration_minutes: null,
-            is_active: true
-          }
+          // Existing modals
+          showNotificationModal: false, showNoteModal: false, showVideoModal: false,
+          editingNotification: null, editingNote: null, editingVideo: null,
+          notificationForm: { title:'', message:'', link:'', exam_name:'', exam_date:'', priority:'medium', is_active:true },
+          noteForm: { title:'', description:'', pdf_url:'', course:'', semester:'', topic:'', file_size_kb:null, is_active:true },
+          videoForm: { title:'', description:'', youtube_url:'', course:'', semester:'', topic:'', duration_minutes:null, is_active:true },
+          selectedFile: null, uploadProgress: 0,
+
+          // Skill Enhancement
+          skillCourses: [],
+          selectedSkillCourse: null,
+          skillNotes: [],
+          skillVideos: [],
+          skillMaterialTab: 'notes',
+
+          showSkillCourseModal: false,
+          editingSkillCourse: null,
+          skillCourseForm: { title:'', description:'', category:'', duration:'', stream:'', semester:'', thumbnail_url:'', is_active:true },
+
+          showSkillMaterialModal: false,
+          editingSkillMaterial: null,
+          skillMaterialType: 'note',
+          skillMaterialForm: { title:'', topic:'', description:'', youtube_url:'', duration_minutes:null },
+          skillSelectedFile: null,
+          skillUploadProgress: 0,
         };
       },
-      
+
       computed: {
         filteredSubmissions() {
           if (!this.submissionSearch.trim()) return this.submissions;
@@ -873,427 +678,239 @@
       mounted() {
         const savedToken = localStorage.getItem('admin_token');
         const savedUsername = localStorage.getItem('admin_username');
-        
         if (savedToken && savedUsername) {
-          this.token = savedToken;
-          this.username = savedUsername;
-          this.isAuthenticated = true;
+          this.token = savedToken; this.username = savedUsername; this.isAuthenticated = true;
           this.loadData();
         }
-        
         setTimeout(() => lucide.createIcons(), 100);
       },
-      
+
       methods: {
+        // ── AUTH ──
         async login() {
-          this.isLoggingIn = true;
-          this.loginError = '';
-          
+          this.isLoggingIn = true; this.loginError = '';
           try {
-            const response = await fetch(`${API_URL}/api/auth/login`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(this.loginForm)
-            });
-            
+            const response = await fetch(`${API_URL}/api/auth/login`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(this.loginForm) });
             const data = await response.json();
-            
             if (response.ok) {
-              this.token = data.access_token;
-              this.username = data.username;
-              this.isAuthenticated = true;
-              
-              localStorage.setItem('admin_token', this.token);
-              localStorage.setItem('admin_username', this.username);
-
+              this.token = data.access_token; this.username = data.username; this.isAuthenticated = true;
+              localStorage.setItem('admin_token', this.token); localStorage.setItem('admin_username', this.username);
               await this.loadData();
-            } else {
-              this.loginError = data.detail || 'Login failed';
-            }
-          } catch (error) {
-            this.loginError = 'Connection error. Please check if the API server is running.';
-            console.error('Login error:', error);
-          } finally {
-            this.isLoggingIn = false;
-          }
+            } else { this.loginError = data.detail || 'Login failed'; }
+          } catch(e) { this.loginError = 'Connection error.'; } finally { this.isLoggingIn = false; }
         },
-        
         logout() {
-          this.isAuthenticated = false;
-          this.token = '';
-          this.username = '';
-          localStorage.removeItem('admin_token');
-          localStorage.removeItem('admin_username');
+          this.isAuthenticated = false; this.token = ''; this.username = '';
+          localStorage.removeItem('admin_token'); localStorage.removeItem('admin_username');
         },
 
+        // ── API HELPERS ──
         async loadData() {
-          await Promise.all([
-            this.loadNotifications(),
-            this.loadNotes(),
-            this.loadVideos(),
-            this.loadTopics(),
-            this.loadSubmissions()
-          ]);
+          await Promise.all([this.loadNotifications(), this.loadNotes(), this.loadVideos(), this.loadTopics(), this.loadSubmissions(), this.loadSkillCourses()]);
           setTimeout(() => lucide.createIcons(), 100);
         },
-
         async apiRequest(endpoint, options = {}) {
-          const headers = {
-            'Content-Type': 'application/json',
-            ...(this.token && { 'Authorization': `Bearer ${this.token}` }),
-            ...options.headers
-          };
-          
-          const response = await fetch(`${API_URL}${endpoint}`, {
-            ...options,
-            headers
-          });
-          
-          if (response.status === 401) {
-            this.logout();
-            throw new Error('Unauthorized');
-          }
-          
+          const headers = { 'Content-Type':'application/json', ...(this.token && {'Authorization':`Bearer ${this.token}`}), ...options.headers };
+          const response = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
+          if (response.status === 401) { this.logout(); throw new Error('Unauthorized'); }
           return response;
         },
-        
-        async loadNotifications() {
+
+        // ── LOADERS ──
+        async loadNotifications() { try { const r = await this.apiRequest('/api/notifications'); this.notifications = await r.json(); this.stats.notifications = this.notifications.length; } catch(e){} },
+        async loadNotes() { try { const r = await this.apiRequest('/api/notes'); this.notes = await r.json(); this.stats.notes = this.notes.length; } catch(e){} },
+        async loadVideos() { try { const r = await this.apiRequest('/api/videos'); this.videos = await r.json(); this.stats.videos = this.videos.length; } catch(e){} },
+        async loadTopics() { try { const r = await this.apiRequest('/api/topics'); const d = await r.json(); this.allTopics = d.topics; } catch(e){} },
+        async loadSubmissions() { try { const r = await this.apiRequest('/api/submissions'); this.submissions = await r.json(); } catch(e){} },
+
+        // ── SKILL COURSES ──
+        async loadSkillCourses() {
           try {
-            const response = await this.apiRequest('/api/notifications');
-            this.notifications = await response.json();
-            this.stats.notifications = this.notifications.length;
-          } catch (error) {
-            console.error('Error loading notifications:', error);
-          }
+            const r = await this.apiRequest('/api/skill-courses');
+            this.skillCourses = await r.json();
+          } catch(e) { console.error('Error loading skill courses:', e); }
+          setTimeout(() => lucide.createIcons(), 100);
         },
-        
-        async loadNotes() {
-          try {
-            const response = await this.apiRequest('/api/notes');
-            this.notes = await response.json();
-            this.stats.notes = this.notes.length;
-          } catch (error) {
-            console.error('Error loading notes:', error);
-          }
+        async selectSkillCourse(sc) {
+          this.selectedSkillCourse = sc;
+          this.skillMaterialTab = 'notes';
+          await this.loadSkillMaterials(sc.id);
+          setTimeout(() => lucide.createIcons(), 100);
         },
-        
-        async loadVideos() {
+        async loadSkillMaterials(courseId) {
           try {
-            const response = await this.apiRequest('/api/videos');
-            this.videos = await response.json();
-            this.stats.videos = this.videos.length;
-          } catch (error) {
-            console.error('Error loading videos:', error);
+            const [nr, vr] = await Promise.all([
+              this.apiRequest(`/api/skill-courses/${courseId}/notes`),
+              this.apiRequest(`/api/skill-courses/${courseId}/videos`)
+            ]);
+            this.skillNotes = await nr.json();
+            this.skillVideos = await vr.json();
+          } catch(e) { console.error('Error loading skill materials:', e); }
+          setTimeout(() => lucide.createIcons(), 100);
+        },
+        openSkillCourseModal(sc = null) {
+          if (sc) {
+            this.editingSkillCourse = sc;
+            this.skillCourseForm = { title:sc.title, description:sc.description||'', category:sc.category||'', duration:sc.duration||'', stream:sc.stream||'', semester:sc.semester||'', thumbnail_url:sc.thumbnail_url||'', is_active:sc.is_active };
+          } else {
+            this.editingSkillCourse = null;
+            this.skillCourseForm = { title:'', description:'', category:'', duration:'', stream:'', semester:'', thumbnail_url:'', is_active:true };
           }
+          this.showSkillCourseModal = true;
+          setTimeout(() => lucide.createIcons(), 100);
+        },
+        async saveSkillCourse() {
+          try {
+            const endpoint = this.editingSkillCourse ? `/api/skill-courses/${this.editingSkillCourse.id}` : '/api/skill-courses';
+            const method = this.editingSkillCourse ? 'PUT' : 'POST';
+            await this.apiRequest(endpoint, { method, body: JSON.stringify(this.skillCourseForm) });
+            await this.loadSkillCourses();
+            this.showSkillCourseModal = false;
+            if (this.selectedSkillCourse && this.editingSkillCourse && this.selectedSkillCourse.id === this.editingSkillCourse.id) {
+              this.selectedSkillCourse = this.skillCourses.find(s => s.id === this.editingSkillCourse.id) || null;
+            }
+          } catch(e) { alert('Error saving: ' + e.message); }
+        },
+        async deleteSkillCourse(id) {
+          if (!confirm('Delete this skill course and all its materials?')) return;
+          try {
+            await this.apiRequest(`/api/skill-courses/${id}`, { method:'DELETE' });
+            if (this.selectedSkillCourse && this.selectedSkillCourse.id === id) { this.selectedSkillCourse = null; this.skillNotes = []; this.skillVideos = []; }
+            await this.loadSkillCourses();
+          } catch(e) { alert('Error deleting: ' + e.message); }
         },
 
-        async loadTopics() {
-          try {
-            const response = await this.apiRequest('/api/topics');
-            const data = await response.json();
-            this.allTopics = data.topics;
-          } catch (error) {
-            console.error('Error loading topics:', error);
+        // ── SKILL MATERIALS ──
+        openSkillMaterialModal(type, material = null) {
+          this.skillMaterialType = type;
+          if (material) {
+            this.editingSkillMaterial = material;
+            this.skillMaterialForm = { title:material.title, topic:material.topic||'', description:material.description||'', youtube_url:material.youtube_url||'', duration_minutes:material.duration_minutes||null };
+          } else {
+            this.editingSkillMaterial = null;
+            this.skillMaterialForm = { title:'', topic:'', description:'', youtube_url:'', duration_minutes:null };
+            this.skillSelectedFile = null;
           }
+          this.showSkillMaterialModal = true;
+          setTimeout(() => lucide.createIcons(), 100);
+        },
+        handleSkillFileChange(e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          if (file.size > 10*1024*1024) { alert('Max 10MB'); e.target.value=''; return; }
+          if (!file.type.includes('pdf')) { alert('PDF only'); e.target.value=''; return; }
+          this.skillSelectedFile = file;
+        },
+        async uploadSkillFile() {
+          if (!this.skillSelectedFile) return null;
+          this.skillUploadProgress = 10;
+          const ts = Date.now();
+          const fileName = `${ts}_${this.skillSelectedFile.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
+          const filePath = `skill-courses/${fileName}`;
+          const { data, error } = await supabaseClient.storage.from('gyana-files').upload(filePath, this.skillSelectedFile, { cacheControl:'3600', upsert:false });
+          if (error) throw new Error(error.message);
+          const { data: { publicUrl } } = supabaseClient.storage.from('gyana-files').getPublicUrl(filePath);
+          this.skillUploadProgress = 100;
+          return publicUrl;
+        },
+        async saveSkillMaterial() {
+          try {
+            const courseId = this.selectedSkillCourse.id;
+            let payload = { ...this.skillMaterialForm };
+            if (this.skillMaterialType === 'note') {
+              if (this.skillSelectedFile) {
+                payload.pdf_url = await this.uploadSkillFile();
+                payload.file_size_kb = Math.round(this.skillSelectedFile.size / 1024);
+              }
+              const endpoint = this.editingSkillMaterial ? `/api/skill-courses/${courseId}/notes/${this.editingSkillMaterial.id}` : `/api/skill-courses/${courseId}/notes`;
+              await this.apiRequest(endpoint, { method: this.editingSkillMaterial ? 'PUT' : 'POST', body: JSON.stringify(payload) });
+            } else {
+              const endpoint = this.editingSkillMaterial ? `/api/skill-courses/${courseId}/videos/${this.editingSkillMaterial.id}` : `/api/skill-courses/${courseId}/videos`;
+              await this.apiRequest(endpoint, { method: this.editingSkillMaterial ? 'PUT' : 'POST', body: JSON.stringify(payload) });
+            }
+            await this.loadSkillMaterials(courseId);
+            this.showSkillMaterialModal = false;
+            this.skillSelectedFile = null;
+            this.skillUploadProgress = 0;
+          } catch(e) { alert('Error saving material: ' + e.message); }
+        },
+        async deleteSkillMaterial(type, id) {
+          if (!confirm('Delete this material?')) return;
+          try {
+            const courseId = this.selectedSkillCourse.id;
+            const endpoint = type === 'note' ? `/api/skill-courses/${courseId}/notes/${id}` : `/api/skill-courses/${courseId}/videos/${id}`;
+            await this.apiRequest(endpoint, { method:'DELETE' });
+            await this.loadSkillMaterials(courseId);
+          } catch(e) { alert('Error deleting: ' + e.message); }
         },
 
-        async loadSubmissions() {
-          try {
-            const response = await this.apiRequest('/api/submissions');
-            this.submissions = await response.json();
-          } catch (error) {
-            console.error('Error loading submissions:', error);
-          }
+        // ── EXISTING CRUD (notifications, notes, videos) ──
+        handleFileChange(e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          if (file.size > 10*1024*1024) { alert('Max 10MB'); e.target.value=''; return; }
+          if (!file.type.includes('pdf')) { alert('PDF only'); e.target.value=''; return; }
+          this.selectedFile = file;
         },
-        
-        handleFileChange(event) {
-          const file = event.target.files[0];
-          if (file) {
-            if (file.size > 10 * 1024 * 1024) {
-              alert('File size must be less than 10MB');
-              event.target.value = '';
-              return;
-            }
-            if (!file.type.includes('pdf')) {
-              alert('Please upload a PDF file');
-              event.target.value = '';
-              return;
-            }
-            this.selectedFile = file;
-          }
-        },
-        
         async uploadFile() {
           if (!this.selectedFile) return;
-
           this.uploadProgress = 0;
-          
-          const timestamp = Date.now();
-          const fileName = `${timestamp}_${this.selectedFile.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+          const ts = Date.now();
+          const fileName = `${ts}_${this.selectedFile.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
           const filePath = `notes/${fileName}`;
-          
-          try {
-            const { data, error } = await supabaseClient.storage
-            .from('gyana-files')
-            .upload(filePath, this.selectedFile, {
-              cacheControl: '3600',
-              upsert: false
-            });
-            
-            if (error) throw error;
-            
-            const { data: { publicUrl } } = supabaseClient.storage
-            .from('gyana-files')
-            .getPublicUrl(filePath);
-            
-            this.noteForm.pdf_url = publicUrl;
-            this.uploadProgress = 100;
-            
-          } catch (error) {
-            console.error('Upload error:', error);
-            throw new Error('File upload failed: ' + error.message);
-          }
+          const { data, error } = await supabaseClient.storage.from('gyana-files').upload(filePath, this.selectedFile, { cacheControl:'3600', upsert:false });
+          if (error) throw error;
+          const { data: { publicUrl } } = supabaseClient.storage.from('gyana-files').getPublicUrl(filePath);
+          this.noteForm.pdf_url = publicUrl;
+          this.uploadProgress = 100;
         },
-        
-        openNotificationModal(notification = null) {
-          if (notification) {
-            this.editingNotification = notification;
-            this.notificationForm = {
-              title: notification.title,
-              message: notification.message,
-              link: notification.link || '',
-              exam_name: notification.exam_name || '',
-              exam_date: notification.exam_date || '',
-              priority: notification.priority,
-              is_active: notification.is_active
-            };
-          } else {
-            this.editingNotification = null;
-            this.notificationForm = {
-              title: '',
-              message: '',
-              link: '',
-              exam_name: '',
-              exam_date: '',
-              priority: 'medium',
-              is_active: true
-            };
-          }
-          this.showNotificationModal = true;
-          setTimeout(() => lucide.createIcons(), 100);
+        openNotificationModal(n = null) {
+          if (n) { this.editingNotification = n; this.notificationForm = { title:n.title, message:n.message, link:n.link||'', exam_name:n.exam_name||'', exam_date:n.exam_date||'', priority:n.priority, is_active:n.is_active }; }
+          else { this.editingNotification = null; this.notificationForm = { title:'', message:'', link:'', exam_name:'', exam_date:'', priority:'medium', is_active:true }; }
+          this.showNotificationModal = true; setTimeout(() => lucide.createIcons(), 100);
         },
-        
-        closeNotificationModal() {
-          this.showNotificationModal = false;
-          this.editingNotification = null;
-        },
-        
+        closeNotificationModal() { this.showNotificationModal = false; this.editingNotification = null; },
         async saveNotification() {
           try {
-            const endpoint = this.editingNotification 
-            ? `/api/notifications/${this.editingNotification.id}`
-            : '/api/notifications';
-            
+            const endpoint = this.editingNotification ? `/api/notifications/${this.editingNotification.id}` : '/api/notifications';
             const method = this.editingNotification ? 'PUT' : 'POST';
-            
-            const cleanedData = {
-              title: this.notificationForm.title,
-              message: this.notificationForm.message,
-              link: this.notificationForm.link || null,
-              exam_name: this.notificationForm.exam_name || null,
-              exam_date: this.notificationForm.exam_date || null,
-              priority: this.notificationForm.priority
-            };
-            
-            if (this.editingNotification) {
-              cleanedData.is_active = this.notificationForm.is_active;
-            }
-            
-            await this.apiRequest(endpoint, {
-              method,
-              body: JSON.stringify(cleanedData)
-            });
-            
-            await this.loadNotifications();
-            this.closeNotificationModal();
-            alert('Notification saved successfully!');
-          } catch (error) {
-            console.error('Error saving notification:', error);
-            alert('Error saving notification: ' + error.message);
-          }
+            const d = { title:this.notificationForm.title, message:this.notificationForm.message, link:this.notificationForm.link||null, exam_name:this.notificationForm.exam_name||null, exam_date:this.notificationForm.exam_date||null, priority:this.notificationForm.priority };
+            if (this.editingNotification) d.is_active = this.notificationForm.is_active;
+            await this.apiRequest(endpoint, { method, body:JSON.stringify(d) });
+            await this.loadNotifications(); this.closeNotificationModal(); alert('Saved!');
+          } catch(e) { alert('Error: ' + e.message); }
         },
-        
-        async deleteNotification(id) {
-          if (confirm('Are you sure you want to delete this notification?')) {
-            try {
-              await this.apiRequest(`/api/notifications/${id}`, { method: 'DELETE' });
-              await this.loadNotifications();
-            } catch (error) {
-              alert('Error deleting notification: ' + error.message);
-            }
-          }
-        },
-        
+        async deleteNotification(id) { if (confirm('Delete?')) { try { await this.apiRequest(`/api/notifications/${id}`, {method:'DELETE'}); await this.loadNotifications(); } catch(e) { alert('Error: '+e.message); } } },
         openNoteModal(note = null) {
-          if (note) {
-            this.editingNote = note;
-            this.noteForm = {
-              title: note.title,
-              description: note.description || '',
-              pdf_url: note.pdf_url,
-              course: note.course,
-              semester: note.semester,
-              topic: note.topic,
-              file_size_kb: note.file_size_kb,
-              is_active: note.is_active
-            };
-          } else {
-            this.editingNote = null;
-            this.noteForm = {
-              title: '',
-              description: '',
-              pdf_url: '',
-              course: '',
-              semester: '',
-              topic: '',
-              file_size_kb: null,
-              is_active: true
-            };
-          }
-          this.showNoteModal = true;
-          setTimeout(() => lucide.createIcons(), 100);
+          if (note) { this.editingNote = note; this.noteForm = { title:note.title, description:note.description||'', pdf_url:note.pdf_url, course:note.course, semester:note.semester, topic:note.topic, file_size_kb:note.file_size_kb, is_active:note.is_active }; }
+          else { this.editingNote = null; this.noteForm = { title:'', description:'', pdf_url:'', course:'', semester:'', topic:'', file_size_kb:null, is_active:true }; }
+          this.showNoteModal = true; setTimeout(() => lucide.createIcons(), 100);
         },
-        
-        closeNoteModal() {
-          this.showNoteModal = false;
-          this.editingNote = null;
-          this.selectedFile = null;
-          this.uploadProgress = 0;
-          const fileInput = document.getElementById('pdfFile');
-          if (fileInput) fileInput.value = '';
-        },
-        
+        closeNoteModal() { this.showNoteModal = false; this.editingNote = null; this.selectedFile = null; this.uploadProgress = 0; const f = document.getElementById('pdfFile'); if(f) f.value=''; },
         async saveNote() {
           try {
-            if (this.selectedFile) {
-              await this.uploadFile();
-              this.noteForm.file_size_kb = Math.round(this.selectedFile.size / 1024);
-            }
-            
-            const endpoint = this.editingNote 
-            ? `/api/notes/${this.editingNote.id}`
-            : '/api/notes';
-
-            const method = this.editingNote ? 'PUT' : 'POST';
-            
-            // Prepare data with semester as string
-            const noteData = {
-              ...this.noteForm,
-              semester: String(this.noteForm.semester)
-            };
-            
-            await this.apiRequest(endpoint, {
-              method,
-              body: JSON.stringify(noteData)
-            });
-            
-            await this.loadNotes();
-            await this.loadTopics();
-            this.closeNoteModal();
-          } catch (error) {
-            alert('Error saving note: ' + error.message);
-          }
+            if (this.selectedFile) { await this.uploadFile(); this.noteForm.file_size_kb = Math.round(this.selectedFile.size/1024); }
+            const endpoint = this.editingNote ? `/api/notes/${this.editingNote.id}` : '/api/notes';
+            await this.apiRequest(endpoint, { method: this.editingNote?'PUT':'POST', body: JSON.stringify({...this.noteForm, semester:String(this.noteForm.semester)}) });
+            await this.loadNotes(); await this.loadTopics(); this.closeNoteModal();
+          } catch(e) { alert('Error: '+e.message); }
         },
-        
-        async deleteNote(id) {
-          if (confirm('Are you sure you want to delete this note?')) {
-            try {
-              await this.apiRequest(`/api/notes/${id}`, { method: 'DELETE' });
-              await this.loadNotes();
-              await this.loadTopics();
-            } catch (error) {
-              alert('Error deleting note: ' + error.message);
-            }
-          }
+        async deleteNote(id) { if (confirm('Delete?')) { try { await this.apiRequest(`/api/notes/${id}`,{method:'DELETE'}); await this.loadNotes(); await this.loadTopics(); } catch(e){alert('Error: '+e.message);} } },
+        openVideoModal(v = null) {
+          if (v) { this.editingVideo = v; this.videoForm = { title:v.title, description:v.description||'', youtube_url:v.youtube_url, course:v.course, semester:v.semester, topic:v.topic, duration_minutes:v.duration_minutes, is_active:v.is_active }; }
+          else { this.editingVideo = null; this.videoForm = { title:'', description:'', youtube_url:'', course:'', semester:'', topic:'', duration_minutes:null, is_active:true }; }
+          this.showVideoModal = true; setTimeout(() => lucide.createIcons(), 100);
         },
-
-        openVideoModal(video = null) {
-          if (video) {
-            this.editingVideo = video;
-            this.videoForm = {
-              title: video.title,
-              description: video.description || '',
-              youtube_url: video.youtube_url,
-              course: video.course,
-              semester: video.semester,
-              topic: video.topic,
-              duration_minutes: video.duration_minutes,
-              is_active: video.is_active
-            };
-          } else {
-            this.editingVideo = null;
-            this.videoForm = {
-              title: '',
-              description: '',
-              youtube_url: '',
-              course: '',
-              semester: '',
-              topic: '',
-              duration_minutes: null,
-              is_active: true
-            };
-          }
-          this.showVideoModal = true;
-          setTimeout(() => lucide.createIcons(), 100);
-        },
-        
-        closeVideoModal() {
-          this.showVideoModal = false;
-          this.editingVideo = null;
-        },
-        
+        closeVideoModal() { this.showVideoModal = false; this.editingVideo = null; },
         async saveVideo() {
           try {
-            const endpoint = this.editingVideo 
-            ? `/api/videos/${this.editingVideo.id}`
-            : '/api/videos';
-            
-            const method = this.editingVideo ? 'PUT' : 'POST';
-            
-            // Prepare data with semester as string
-            const videoData = {
-              ...this.videoForm,
-              semester: String(this.videoForm.semester)
-            };
-            
-            await this.apiRequest(endpoint, {
-              method,
-              body: JSON.stringify(videoData)
-            });
-            
-            await this.loadVideos();
-            await this.loadTopics();
-            this.closeVideoModal();
-          } catch (error) {
-            alert('Error saving video: ' + error.message);
-          }
+            const endpoint = this.editingVideo ? `/api/videos/${this.editingVideo.id}` : '/api/videos';
+            await this.apiRequest(endpoint, { method: this.editingVideo?'PUT':'POST', body: JSON.stringify({...this.videoForm, semester:String(this.videoForm.semester)}) });
+            await this.loadVideos(); await this.loadTopics(); this.closeVideoModal();
+          } catch(e) { alert('Error: '+e.message); }
         },
-        
-        async deleteVideo(id) {
-          if (confirm('Are you sure you want to delete this video?')) {
-            try {
-              await this.apiRequest(`/api/videos/${id}`, { method: 'DELETE' });
-              await this.loadVideos();
-              await this.loadTopics();
-            } catch (error) {
-              alert('Error deleting video: ' + error.message);
-            }
-          }
-        },
-        formatDate(date) {
-          if (!date) return 'N/A';
-          return new Date(date).toLocaleDateString();
-        }
+        async deleteVideo(id) { if (confirm('Delete?')) { try { await this.apiRequest(`/api/videos/${id}`,{method:'DELETE'}); await this.loadVideos(); await this.loadTopics(); } catch(e){alert('Error: '+e.message);} } },
+        formatDate(d) { if (!d) return 'N/A'; return new Date(d).toLocaleDateString(); }
       }
     }).mount('#app');
   </script>

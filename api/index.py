@@ -127,7 +127,7 @@ class StudentSubmission(BaseModel):
     email: str
     mobile: str
     currentCourse: str
-    collegeName: Optional[str] = None  # stored as residence_address
+    collegeName: Optional[str] = None
     class_year: Optional[str] = None
     goals: Optional[str] = None
     skills: Optional[str] = None
@@ -336,25 +336,13 @@ def delete_notification(notification_id: int, username=Depends(verify_token)):
         raise HTTPException(status_code=500, detail=f"Failed to delete notification: {str(e)}")
 
 # ---------------- STUDENT SUBMISSIONS ----------------
-@app.get("/api/submissions")
-def get_submissions(username=Depends(verify_token)):
-    try:
-        result = execute_query(
-            "SELECT * FROM student_submissions ORDER BY created_at DESC",
-            fetch_all=True
-        )
-        return result or []
-    except Exception as e:
-        print(f"Get submissions error: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to fetch submissions: {str(e)}")
-
 @app.post("/api/submit")
 def submit_student_form(data: StudentSubmission):
     try:
         result = execute_query(
             """
             INSERT INTO student_submissions 
-            (name, email, mobile, course, residence_address, class_year, goals, current_skills, skills_to_learn)
+            (name, email, mobile, course, college_name, class_year, goals, current_skills, skills_to_learn)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
             """,
@@ -619,3 +607,298 @@ def get_topics():
     except Exception as e:
         print(f"Get topics error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to fetch topics: {str(e)}")
+# ---------------- SUBMISSIONS ----------------
+@app.get("/api/submissions")
+def get_submissions(username=Depends(verify_token)):
+    try:
+        return execute_query(
+            "SELECT * FROM student_submissions ORDER BY created_at DESC",
+            fetch_all=True
+        ) or []
+    except Exception as e:
+        print(f"Get submissions error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch submissions: {str(e)}")
+
+
+# ==================================================
+# SKILL ENHANCEMENT COURSES
+# ==================================================
+
+# ---------- Pydantic Models ----------
+
+class SkillCourseCreate(BaseModel):
+    title: str
+    description: Optional[str] = None
+    category: Optional[str] = None
+    duration: Optional[str] = None
+    stream: Optional[str] = None
+    semester: Optional[str] = None
+    thumbnail_url: Optional[str] = None
+
+class SkillCourseUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    category: Optional[str] = None
+    duration: Optional[str] = None
+    stream: Optional[str] = None
+    semester: Optional[str] = None
+    thumbnail_url: Optional[str] = None
+    is_active: Optional[bool] = None
+
+class SkillNoteCreate(BaseModel):
+    title: str
+    topic: str
+    description: Optional[str] = None
+    pdf_url: Optional[str] = None
+    file_size_kb: Optional[int] = None
+
+class SkillNoteUpdate(BaseModel):
+    title: Optional[str] = None
+    topic: Optional[str] = None
+    description: Optional[str] = None
+    pdf_url: Optional[str] = None
+    file_size_kb: Optional[int] = None
+    is_active: Optional[bool] = None
+
+class SkillVideoCreate(BaseModel):
+    title: str
+    topic: str
+    description: Optional[str] = None
+    youtube_url: str
+    duration_minutes: Optional[int] = None
+
+class SkillVideoUpdate(BaseModel):
+    title: Optional[str] = None
+    topic: Optional[str] = None
+    description: Optional[str] = None
+    youtube_url: Optional[str] = None
+    duration_minutes: Optional[int] = None
+    is_active: Optional[bool] = None
+
+
+# ---------- Skill Courses CRUD ----------
+
+@app.get("/api/skill-courses")
+def get_skill_courses(stream: Optional[str] = None, semester: Optional[str] = None):
+    try:
+        query = "SELECT * FROM skill_courses WHERE 1=1"
+        params = []
+        if stream:
+            query += " AND (stream = %s OR stream IS NULL OR stream = '')"
+            params.append(stream)
+        if semester:
+            query += " AND (semester = %s OR semester IS NULL OR semester = '')"
+            params.append(semester)
+        query += " ORDER BY created_at DESC"
+        return execute_query(query, tuple(params) if params else None, fetch_all=True) or []
+    except Exception as e:
+        print(f"Get skill courses error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch skill courses: {str(e)}")
+
+
+@app.post("/api/skill-courses")
+def create_skill_course(data: SkillCourseCreate, username=Depends(verify_token)):
+    try:
+        user = execute_query("SELECT id FROM admin_users WHERE username=%s", (username,), fetch_one=True)
+        result = execute_query(
+            """
+            INSERT INTO skill_courses (title, description, category, duration, stream, semester, thumbnail_url, created_by)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            RETURNING id
+            """,
+            (data.title, data.description, data.category, data.duration,
+             data.stream or None, data.semester or None, data.thumbnail_url, user["id"]),
+            fetch_one=True
+        )
+        return {"id": result["id"], "message": "Skill course created successfully"}
+    except Exception as e:
+        print(f"Create skill course error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to create skill course: {str(e)}")
+
+
+@app.put("/api/skill-courses/{course_id}")
+def update_skill_course(course_id: int, data: SkillCourseUpdate, username=Depends(verify_token)):
+    try:
+        updates, params = [], []
+        field_map = {
+            "title": data.title, "description": data.description,
+            "category": data.category, "duration": data.duration,
+            "thumbnail_url": data.thumbnail_url
+        }
+        for field, value in field_map.items():
+            if value is not None:
+                updates.append(f"{field} = %s")
+                params.append(value)
+        # stream and semester can be explicitly set to empty
+        if data.stream is not None:
+            updates.append("stream = %s")
+            params.append(data.stream or None)
+        if data.semester is not None:
+            updates.append("semester = %s")
+            params.append(data.semester or None)
+        if data.is_active is not None:
+            updates.append("is_active = %s")
+            params.append(data.is_active)
+        if not updates:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        params.append(course_id)
+        execute_query(f"UPDATE skill_courses SET {', '.join(updates)} WHERE id = %s", tuple(params))
+        return {"message": "Skill course updated successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Update skill course error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to update skill course: {str(e)}")
+
+
+@app.delete("/api/skill-courses/{course_id}")
+def delete_skill_course(course_id: int, username=Depends(verify_token)):
+    try:
+        # Cascade delete materials first
+        execute_query("DELETE FROM skill_notes WHERE skill_course_id = %s", (course_id,))
+        execute_query("DELETE FROM skill_videos WHERE skill_course_id = %s", (course_id,))
+        execute_query("DELETE FROM skill_courses WHERE id = %s", (course_id,))
+        return {"message": "Skill course deleted successfully"}
+    except Exception as e:
+        print(f"Delete skill course error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to delete skill course: {str(e)}")
+
+
+# ---------- Skill Notes CRUD ----------
+
+@app.get("/api/skill-courses/{course_id}/notes")
+def get_skill_notes(course_id: int):
+    try:
+        return execute_query(
+            "SELECT * FROM skill_notes WHERE skill_course_id = %s AND is_active IS TRUE ORDER BY created_at ASC",
+            (course_id,), fetch_all=True
+        ) or []
+    except Exception as e:
+        print(f"Get skill notes error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch skill notes: {str(e)}")
+
+
+@app.post("/api/skill-courses/{course_id}/notes")
+def create_skill_note(course_id: int, data: SkillNoteCreate, username=Depends(verify_token)):
+    try:
+        result = execute_query(
+            """
+            INSERT INTO skill_notes (skill_course_id, title, topic, description, pdf_url, file_size_kb)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            RETURNING id
+            """,
+            (course_id, data.title, data.topic, data.description, data.pdf_url, data.file_size_kb),
+            fetch_one=True
+        )
+        return {"id": result["id"], "message": "Skill note created successfully"}
+    except Exception as e:
+        print(f"Create skill note error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to create skill note: {str(e)}")
+
+
+@app.put("/api/skill-courses/{course_id}/notes/{note_id}")
+def update_skill_note(course_id: int, note_id: int, data: SkillNoteUpdate, username=Depends(verify_token)):
+    try:
+        updates, params = [], []
+        field_map = {
+            "title": data.title, "topic": data.topic,
+            "description": data.description, "pdf_url": data.pdf_url,
+            "file_size_kb": data.file_size_kb
+        }
+        for field, value in field_map.items():
+            if value is not None:
+                updates.append(f"{field} = %s")
+                params.append(value)
+        if data.is_active is not None:
+            updates.append("is_active = %s")
+            params.append(data.is_active)
+        if not updates:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        params.extend([note_id, course_id])
+        execute_query(f"UPDATE skill_notes SET {', '.join(updates)} WHERE id = %s AND skill_course_id = %s", tuple(params))
+        return {"message": "Skill note updated successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Update skill note error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to update skill note: {str(e)}")
+
+
+@app.delete("/api/skill-courses/{course_id}/notes/{note_id}")
+def delete_skill_note(course_id: int, note_id: int, username=Depends(verify_token)):
+    try:
+        execute_query("DELETE FROM skill_notes WHERE id = %s AND skill_course_id = %s", (note_id, course_id))
+        return {"message": "Skill note deleted successfully"}
+    except Exception as e:
+        print(f"Delete skill note error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to delete skill note: {str(e)}")
+
+
+# ---------- Skill Videos CRUD ----------
+
+@app.get("/api/skill-courses/{course_id}/videos")
+def get_skill_videos(course_id: int):
+    try:
+        return execute_query(
+            "SELECT * FROM skill_videos WHERE skill_course_id = %s AND is_active IS TRUE ORDER BY created_at ASC",
+            (course_id,), fetch_all=True
+        ) or []
+    except Exception as e:
+        print(f"Get skill videos error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch skill videos: {str(e)}")
+
+
+@app.post("/api/skill-courses/{course_id}/videos")
+def create_skill_video(course_id: int, data: SkillVideoCreate, username=Depends(verify_token)):
+    try:
+        result = execute_query(
+            """
+            INSERT INTO skill_videos (skill_course_id, title, topic, description, youtube_url, duration_minutes)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            RETURNING id
+            """,
+            (course_id, data.title, data.topic, data.description, data.youtube_url, data.duration_minutes),
+            fetch_one=True
+        )
+        return {"id": result["id"], "message": "Skill video created successfully"}
+    except Exception as e:
+        print(f"Create skill video error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to create skill video: {str(e)}")
+
+
+@app.put("/api/skill-courses/{course_id}/videos/{video_id}")
+def update_skill_video(course_id: int, video_id: int, data: SkillVideoUpdate, username=Depends(verify_token)):
+    try:
+        updates, params = [], []
+        field_map = {
+            "title": data.title, "topic": data.topic,
+            "description": data.description, "youtube_url": data.youtube_url,
+            "duration_minutes": data.duration_minutes
+        }
+        for field, value in field_map.items():
+            if value is not None:
+                updates.append(f"{field} = %s")
+                params.append(value)
+        if data.is_active is not None:
+            updates.append("is_active = %s")
+            params.append(data.is_active)
+        if not updates:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        params.extend([video_id, course_id])
+        execute_query(f"UPDATE skill_videos SET {', '.join(updates)} WHERE id = %s AND skill_course_id = %s", tuple(params))
+        return {"message": "Skill video updated successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Update skill video error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to update skill video: {str(e)}")
+
+
+@app.delete("/api/skill-courses/{course_id}/videos/{video_id}")
+def delete_skill_video(course_id: int, video_id: int, username=Depends(verify_token)):
+    try:
+        execute_query("DELETE FROM skill_videos WHERE id = %s AND skill_course_id = %s", (video_id, course_id))
+        return {"message": "Skill video deleted successfully"}
+    except Exception as e:
+        print(f"Delete skill video error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to delete skill video: {str(e)}")
